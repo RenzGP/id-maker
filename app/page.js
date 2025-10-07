@@ -83,26 +83,23 @@ export default function Page() {
       .trim();
   };
 
-  /* input handler with live formatting */
+  /* input handler */
   const handle_input = (e) => {
     const { name, value } = e.target;
     let formatted = value;
-
     if (name === "emergency_contact_number") formatted = formatPhone(value);
     else if (name === "sss_no") formatted = formatSSS(value);
     else if (name === "tin_no") formatted = formatTIN(value);
-
     set_form_data((p) => ({ ...p, [name]: formatted }));
   };
 
+  /* handle file upload */
   const handle_file = async (e) => {
     const { name, files } = e.target;
     const file = files?.[0];
     if (!file) return;
-
     let base64 = await resizeImage(file, 600, 600);
     set_form_data((p) => ({ ...p, [name]: file }));
-
     if (name === "employee_photo_file") set_employee_photo_preview(base64);
     if (name === "signature_file") set_signature_preview(base64);
   };
@@ -177,6 +174,59 @@ export default function Page() {
     }
   };
 
+  /* save high-res images */
+  const save_images = async () => {
+    if (!card_ref.current) return alert("No card to save");
+    try {
+      const ensure_images_loaded = async () => {
+        const imgs = card_ref.current.querySelectorAll("img");
+        await Promise.all(
+          Array.from(imgs).map(
+            (img) =>
+              new Promise((resolve) => {
+                if (img.complete) return resolve();
+                img.onload = resolve;
+                img.onerror = resolve;
+              })
+          )
+        );
+      };
+
+      set_is_front(true);
+      await new Promise((r) => setTimeout(r, 600));
+      await ensure_images_loaded();
+      const front_png = await htmlToImage.toPng(card_ref.current, {
+        cacheBust: true,
+        pixelRatio: 3,
+        backgroundColor: "white",
+      });
+
+      set_is_front(false);
+      await new Promise((r) => setTimeout(r, 600));
+      await ensure_images_loaded();
+      const back_png = await htmlToImage.toPng(card_ref.current, {
+        cacheBust: true,
+        pixelRatio: 3,
+        backgroundColor: "white",
+      });
+
+      const download = (dataUrl, filename) => {
+        const a = document.createElement("a");
+        a.href = dataUrl;
+        a.download = filename;
+        a.click();
+      };
+
+      download(front_png, `${form_data.full_name || "front"}_front.png`);
+      download(back_png, `${form_data.full_name || "back"}_back.png`);
+
+      set_is_front(true);
+    } catch (err) {
+      console.error("save image error", err);
+      alert("Saving images failed — see console.");
+    }
+  };
+
   const today = new Date().toISOString().split("T")[0];
 
   return (
@@ -208,6 +258,7 @@ export default function Page() {
             <button onClick={() => set_is_front(true)} className="px-3 py-2 bg-blue-600 text-white rounded">Show Front</button>
             <button onClick={() => set_is_front(false)} className="px-3 py-2 border rounded">Show Back</button>
             <button onClick={print_card} className="px-3 py-2 bg-red-600 text-white rounded">Print</button>
+            <button onClick={save_images} className="px-3 py-2 bg-green-600 text-white rounded">Save Image</button>
           </div>
         </section>
 
@@ -226,7 +277,7 @@ export default function Page() {
   );
 }
 
-/* reusable inputs */
+/* text input */
 function Input({ label, className = "", ...props }) {
   return (
     <div className={className}>
@@ -236,6 +287,7 @@ function Input({ label, className = "", ...props }) {
   );
 }
 
+/* file input */
 function FileInput({ label, name, onChange }) {
   return (
     <div>
