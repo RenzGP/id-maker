@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* Register local Greycliff Arabic CF font */
+@font-face {
+  font-family: "Greycliff Arabic CF";
+  src: url("/fonts/fonnts.com-Greycliff_Arabic_CF_Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -21,7 +30,7 @@
   }
 }
 
-/* ✅ Body defaults */
+/* Body defaults */
 body {
   background: var(--background);
   color: var(--foreground);
@@ -30,7 +39,7 @@ body {
   padding: 0;
 }
 
-/* ✅ Worksavers Logo font placeholder */
+/* Worksavers logo uses brand font */
 .worksavers-logo {
   font-family: "Greycliff Arabic CF", "Poppins", "Roboto", sans-serif;
   font-weight: 700;
@@ -38,7 +47,7 @@ body {
   text-transform: uppercase;
 }
 
-/* ✅ Utility classes for flexible text sizing */
+/* Utility classes for flexible text sizing */
 .text-xs { font-size: 0.75rem; }
 .text-sm { font-size: 0.875rem; }
 .text-base { font-size: 1rem; }
