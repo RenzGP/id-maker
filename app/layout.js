@@ -31,18 +31,7 @@ export default function RootLayout({ children }) {
         <meta name="theme-color" content="#1e40af" />
         <link rel="manifest" href="/manifest.json" />
 
-        {/* Roboto and Poppins Fonts */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@500;600;700&display=swap"
-          rel="stylesheet"
-        />
-
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        />
+        <link rel="stylesheet" href="/fa/css/all.min.css" />
 
       </head>
 
