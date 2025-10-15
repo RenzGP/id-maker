@@ -55,3 +55,42 @@ body {
 .text-xl { font-size: 1.25rem; }
 .text-2xl { font-size: 1.5rem; }
 .text-3xl { font-size: 1.875rem; }
+
+label , h1{
+  color: #171717;
+}
+
+::placeholder {
+  color: #999 !important;
+  opacity: 1 !important;
+}
+
+input[type="file"] {
+  color: #999;
+  font-size: 14px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+textarea {
+  color: #000; /* Makes text black and visible */
+  background-color: #fff; /* White background for clarity */
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px;
+  width: 100%;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+input:focus {
+  outline: none;
+  border-color: #2563eb; /* Tailwind blue-600 */
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+

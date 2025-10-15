@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import * as htmlToImage from "html-to-image";
 import html2canvas from "html2canvas";
-import company_logo from "@/public/company-logo.png";
+import company_logo from "@/public/company-logo.jpg";
 
 export default function InternalPage() {
   const router = useRouter();
@@ -192,130 +192,167 @@ export default function InternalPage() {
               ref={card_ref}
               className="relative bg-white shadow-xl border w-[340px] h-[540px] rounded-md flex overflow-hidden"
             >
-              <div className="flex flex-col items-center relative">
-                <div className="w-[55px] h-[70px] flex justify-center items-center bg-white">
-                  <Image
-                    src={company_logo}
-                    alt="Logo"
-                    width={60}
-                    height={60}
-                    style={{ objectFit: "contain" }}
-                  />
-                </div>
-                <div className="bg-blue-900 w-[55px] flex-1 flex flex-col justify-center items-center">
+              <div className="flex flex-col items-center relative" style={{ height: "100%" }}>
+                {/* Full vertical bar including logo */}
+                <div
+                  className="flex flex-col justify-start items-center"
+                  style={{
+                    width: "70px",
+                    height: "100%",
+                    backgroundColor: "#2b467d",
+                  }}
+                >
+                  {/* Logo section with gray background */}
                   <div
-                    className="rotate-[270deg] text-white font-extrabold leading-none text-center"
+                    className="w-full h-[85px] flex justify-center items-center"
                     style={{
-                      letterSpacing: "0.5em",
-                      fontSize: `${font_size_dept}px`,
+                      backgroundColor: "#d9d9d9",
                     }}
                   >
-                    {department || "DEPARTMENT"}
+                    <Image
+                      src={company_logo}
+                      alt="Logo"
+                      width={60}
+                      height={60}
+                      style={{
+                        objectFit: "contain",
+                      }}
+                    />
+                  </div>
+
+                  {/* Department label fills remaining space */}
+                  <div className="flex-1 flex justify-center items-center">
+                    <div
+                      className="rotate-[270deg] text-white font-extrabold leading-none text-center"
+                      style={{
+                        letterSpacing: "0.5em",
+                        fontSize: `${font_size_dept}px`,
+                      }}
+                    >
+                      {department || "DEPARTMENT"}
+                    </div>
                   </div>
                 </div>
               </div>
+                {/* Main card area */}
+                <div className="flex-1 flex justify-center items-start mt-4">
+                  {!show_back ? (
+                    <div className="flex flex-col items-center justify-between p-6 pb-4 w-[260px]">
+                      <div className="text-center mb-2">
+                        <h1
+                          className="worksavers-logo text-4xl leading-none"
+                          style={{
+                            fontFamily: "Greycliff Arabic CF, sans-serif",
+                            fontWeight: 700,
+                            textTransform: "none", // ensures it keeps the original case
+                          }}
+                        >
+                          <span style={{ color: "#2b467d" }}>Work</span>
+                          <span style={{ color: "#a6033f" }}>savers</span>
+                        </h1>
 
-              {!show_back ? (
-                <div className="flex-1 flex flex-col items-center justify-between p-6 pb-4">
-                  <div className="text-center mb-2">
-                    <h1
-                      className="worksavers-logo text-4xl text-blue-900 leading-none"
-                      style={{
-                        fontFamily:
-                          "Greycliff Arabic CF, sans-serif",
-                        fontWeight: 700,
-                      }}
-                    >
-                      Work<span className="text-red-600">savers</span>
-                    </h1>
-                    <div className="mt-1">
-                      <p className="text-[10px] font-bold tracking-wide text-black">
-                        WORKSAVERS PERSONNEL SVCS., INC.
-                      </p>
-                      <p className="text-[9px] leading-tight mt-1 text-black">
-                        7827 Worksavers Bldg., S. Javier St.
-                        <br />
-                        Brgy. Pio Del Pilar, Makati City, 1230
-                        <br />
-                        Tel. 8937307; 8122608; 8122022
-                      </p>
+                        <div className="mt-1">
+                          <p className="text-[10px] font-bold tracking-wide text-black">
+                            WORKSAVERS PERSONNEL SVCS., INC.
+                          </p>
+                          <p className="text-[9px] leading-tight mt-1 text-black">
+                            7827 Worksavers Bldg., S. Javier St.
+                            <br />
+                            Brgy. Pio Del Pilar, Makati City, 1230
+                            <br />
+                            Tel. 8937307; 8122608; 8122022
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="border-[3px] border-red-700 rounded-[12px] w-[192px] h-[192px] flex items-center justify-center overflow-hidden bg-gray-200 mb-3">
+                        {photo_url ? (
+                          <img
+                            src={photo_url}
+                            alt="Uploaded"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="text-xs text-gray-600">Photo Here</div>
+                        )}
+                      </div>
+
+                      {/* Name & Position */}
+                      <div className="text-center text-black mb-2">
+                        <p
+                          className="font-bold"
+                          style={{ fontSize: `${font_size_name}px` }}
+                        >
+                          {full_name || "FULL NAME"}
+                        </p>
+                        <p
+                          className="tracking-widest"
+                          style={{ fontSize: `${font_size_position}px` }}
+                        >
+                          {position || "POSITION"}
+                        </p>
+                      </div>
+
+                      {/* ID Number */}
+                      <div className="text-center text-black mb-6">
+                        <p className="text-[11px]">{id_no || "ID NO"}</p>
+                      </div>
+
+                      {/* Signature Section */}
+                      <div className="text-center text-black mt-6">
+                        <div className="border-t border-black w-[120px] mx-auto" />
+                        <p className="text-[10px] mt-1">Signature</p>
+                      </div>
+
                     </div>
-                  </div>
+                  ) : (
+                    <div className="flex flex-col justify-start w-[260px] p-5 pl-6 relative">
+                      <div
+                        className="mt-16 text-black leading-tight space-y-1"
+                        style={{ fontSize: `${font_size_back}px` }}
+                      >
+                        <p>
+                          <strong>SSS No:</strong> {sss_no || "00-0000000-0"}
+                        </p>
+                        <p>
+                          <strong>TIN No:</strong> {tin_no || "000-000-000"}
+                        </p>
 
-                  <div className="border-[3px] border-red-700 rounded-[12px] w-[192px] h-[192px] flex items-center justify-center overflow-hidden bg-gray-200">
-                    {photo_url ? (
-                      <img
-                        src={photo_url}
-                        alt="Uploaded"
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="text-xs text-gray-600">Photo Here</div>
-                    )}
-                  </div>
+                        <div className="mt-5">
+                          <p className="font-bold mb-1">
+                            In case of Emergency Please Notify:
+                          </p>
+                          <p>
+                            <strong>Name:</strong>{" "}
+                            {emergency_name || "First Name M.I. Last Name"}
+                          </p>
+                          <p>
+                            <strong>Address:</strong>{" "}
+                            {emergency_address || "## St. Brgy. Municipality, City"}
+                          </p>
+                          <p>
+                            <strong>Contact No:</strong>{" "}
+                            {emergency_contact || "0900-000-0000"}
+                          </p>
+                        </div>
 
-                  <div className="text-center text-black">
-                    <p
-                      className="font-bold"
-                      style={{ fontSize: `${font_size_name}px` }}
-                    >
-                      {full_name || "FULL NAME"}
-                    </p>
-                    <p
-                      className="tracking-widest mb-2"
-                      style={{ fontSize: `${font_size_position}px` }}
-                    >
-                      {position || "POSITION"}
-                    </p>
-                    <p className="text-[11px] mb-4">{id_no || "ID NO"}</p>
-                    <div className="border-t border-black w-[120px] mx-auto mt-2" />
-                    <p className="text-[10px] mt-1">Signature</p>
-                  </div>
+                        <div className="mt-10 text-[10px] leading-snug text-justify tracking-[0.02em]">
+                          THIS IDENTIFICATION CARD BELONGS TO THE COMPANY AND MUST BE
+                          SURRENDERED UPON RESIGNATION OR TERMINATION OF EMPLOYMENT AS A
+                          REQUIREMENT FOR CLEARANCE.
+                        </div>
+
+                        <div className="mt-10 flex flex-col items-center">
+                          <div className="border-t border-black w-[220px] mb-1" />
+                          <p className="font-bold text-[11px]">
+                            CHARMAINE C. EDIRISINGHE
+                          </p>
+                          <p className="text-[9px]">Treasurer</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className="flex-1 flex flex-col justify-start p-5 pl-6 relative">
-                  <div
-                    className="ml-[15px] mt-16 text-black leading-tight space-y-1"
-                    style={{ fontSize: `${font_size_back}px` }}
-                  >
-                    <p>
-                      <strong>SSS No:</strong> {sss_no || "00-0000000-0"}
-                    </p>
-                    <p>
-                      <strong>TIN No:</strong> {tin_no || "000-000-000"}
-                    </p>
-                    <div className="mt-5">
-                      <p className="font-bold mb-1">
-                        In case of Emergency Please Notify:
-                      </p>
-                      <p>
-                        <strong>Name:</strong>{" "}
-                        {emergency_name || "First Name M.I. Last Name"}
-                      </p>
-                      <p>
-                        <strong>Address:</strong>{" "}
-                        {emergency_address || "## St. Brgy. Municipality, City"}
-                      </p>
-                      <p>
-                        <strong>Contact No:</strong>{" "}
-                        {emergency_contact || "0900-000-0000"}
-                      </p>
-                    </div>
-                    <div className="mt-10 text-[10px] leading-snug text-justify tracking-[0.02em]">
-                      THIS IDENTIFICATION CARD BELONGS TO THE COMPANY AND MUST BE
-                      SURRENDERED UPON RESIGNATION OR TERMINATION OF EMPLOYMENT AS
-                      A REQUIREMENT FOR CLEARANCE.
-                    </div>
-                    <div className="mt-10 flex flex-col items-center">
-                      <div className="border-t border-black w-[220px] mb-1" />
-                      <p className="font-bold text-[11px]">
-                        CHARMAINE C. EDIRISINGHE
-                      </p>
-                      <p className="text-[9px]">Treasurer</p>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
 
@@ -377,7 +414,7 @@ export default function InternalPage() {
                         onChange={(e) =>
                           set_full_name(e.target.value.toUpperCase())
                         }
-                        className="w-full border rounded px-2 py-1 uppercase"
+                        className="border w-full p-2 mb-3 rounded-md uppercase"
                       />
                     </div>
                     <div>
@@ -389,7 +426,7 @@ export default function InternalPage() {
                         onChange={(e) =>
                           set_position(e.target.value.toUpperCase())
                         }
-                        className="w-full border rounded px-2 py-1"
+                        className="border w-full p-2 mb-3 rounded-md"
                       />
                     </div>
                     <div>
@@ -399,7 +436,7 @@ export default function InternalPage() {
                         placeholder="Enter ID number"
                         value={id_no || ""}
                         onChange={(e) => set_id_no(e.target.value)}
-                        className="w-full border rounded px-2 py-1"
+                        className="border w-full p-2 mb-3 rounded-md"
                       />
                     </div>
                     <div>
@@ -411,7 +448,7 @@ export default function InternalPage() {
                         onChange={(e) =>
                           set_department(e.target.value.toUpperCase())
                         }
-                        className="w-full border rounded px-2 py-1"
+                        className="border w-full p-2 mb-3 rounded-md"
                       />
                     </div>
                     <div>
@@ -425,37 +462,35 @@ export default function InternalPage() {
                         className="w-full"
                       />
                     </div>
-                    <div>
+                    <div className="mt-3">
                       <label className="block font-medium mb-1">
                         Department Font Size: {font_size_dept}px
                       </label>
                       <input
                         type="range"
-                        min="16"
-                        max="40"
+                        min="10"
+                        max="30"
                         value={font_size_dept}
                         onChange={(e) =>
                           set_font_size_dept(Number(e.target.value))
                         }
-                        className="w-full"
+                        className="w-full mb-1"
                       />
-                    </div>
-                    <div>
+
                       <label className="block font-medium mb-1">
-                        Name Font Size: {font_size_name}px
+                        Full Name Font Size: {font_size_name}px
                       </label>
                       <input
                         type="range"
-                        min="12"
-                        max="30"
+                        min="8"
+                        max="20"
                         value={font_size_name}
                         onChange={(e) =>
                           set_font_size_name(Number(e.target.value))
                         }
-                        className="w-full"
+                        className="w-full mb-1"
                       />
-                    </div>
-                    <div>
+
                       <label className="block font-medium mb-1">
                         Position Font Size: {font_size_position}px
                       </label>
@@ -467,7 +502,7 @@ export default function InternalPage() {
                         onChange={(e) =>
                           set_font_size_position(Number(e.target.value))
                         }
-                        className="w-full"
+                        className="w-full mb-1"
                       />
                     </div>
                   </div>
@@ -482,7 +517,7 @@ export default function InternalPage() {
                         onChange={(e) =>
                           set_sss_no(format_sss(e.target.value))
                         }
-                        className="w-full border rounded px-2 py-1"
+                        className="border w-full p-2 mb-3 rounded-md"
                       />
                     </div>
                     <div>
@@ -494,7 +529,7 @@ export default function InternalPage() {
                         onChange={(e) =>
                           set_tin_no(format_tin(e.target.value))
                         }
-                        className="w-full border rounded px-2 py-1"
+                        className="border w-full p-2 mb-3 rounded-md"
                       />
                     </div>
                     <div>
@@ -505,8 +540,8 @@ export default function InternalPage() {
                         type="text"
                         placeholder="First Name M.I. Last Name"
                         value={emergency_name || ""}
-                        onChange={(e) => set_emergency_name(e.target.value)}
-                        className="w-full border rounded px-2 py-1"
+                        onChange={(e) => set_emergency_name(e.target.value.toUpperCase())}
+                        className="border w-full p-2 mb-3 rounded-md"
                       />
                     </div>
                     <div>
@@ -517,8 +552,8 @@ export default function InternalPage() {
                         type="text"
                         placeholder="## St. Brgy. Municipality, City"
                         value={emergency_address || ""}
-                        onChange={(e) => set_emergency_address(e.target.value)}
-                        className="w-full border rounded px-2 py-1"
+                        onChange={(e) => set_emergency_address(e.target.value.toUpperCase())}
+                        className="border w-full p-2 mb-3 rounded-md"
                       />
                     </div>
                     <div>
@@ -532,7 +567,7 @@ export default function InternalPage() {
                         onChange={(e) =>
                           set_emergency_contact(format_contact(e.target.value))
                         }
-                        className="w-full border rounded px-2 py-1"
+                        className="border w-full p-2 mb-3 rounded-md"
                         inputMode="numeric"
                       />
                     </div>
