@@ -265,7 +265,7 @@ export default function InternalPage() {
                         </div>
                       </div>
 
-                      <div className="border-[3px] border-red-700 rounded-[12px] w-[192px] h-[192px] flex items-center justify-center overflow-hidden bg-gray-200 mb-3">
+                      <div className="border-[3px] border-[#a6033f] rounded-[24px] w-[192px] h-[192px] flex items-center justify-center overflow-hidden bg-gray-200 mb-3">
                         {photo_url ? (
                           <img
                             src={photo_url}
@@ -276,6 +276,7 @@ export default function InternalPage() {
                           <div className="text-xs text-gray-600">Photo Here</div>
                         )}
                       </div>
+
 
                       {/* Name & Position */}
                       <div className="text-center text-black mb-2">

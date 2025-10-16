@@ -189,7 +189,11 @@ const handlePhotoUpload = (e) => {
       <div className="flex flex-col lg:flex-row justify-center gap-8 px-6">
         {/* ID PREVIEW */}
         <div className="flex justify-center">
-          <div ref={idRef}>
+          <div
+            ref={idRef}
+            className="relative w-[340px] h-[520px] overflow-hidden bg-white"
+            style={{ boxSizing: "border-box" }}
+          >
             {!showBack ? (
               /* FRONT SIDE */
               <div
@@ -327,7 +331,7 @@ const handlePhotoUpload = (e) => {
                   </p>
                 </div>
 
-                <div className="px-6 text-center mt-8 mb-12">
+                <div className="px-6 text-center mt-8 mb-4">
                   <div className="border-t border-gray-700 w-[220px] mx-auto mb-1"></div>
                   <p className="font-bold text-[11px] text-gray-900">
                     CHARMAINE C. EDIRISINGHE
