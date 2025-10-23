@@ -17,11 +17,14 @@ export const metadata = {
   title: "WS ID Maker",
   description: "Generate and print professional ID cards easily.",
   manifest: "/manifest.json",
-  themeColor: "#1e40af",
   icons: {
     icon: "/icons/icon-192x192.png",
     apple: "/icons/icon-512x512.png",
   },
+};
+
+export const viewport = {
+  themeColor: "#2b467d",
 };
 
 export default function RootLayout({ children }) {

@@ -1,13 +1,16 @@
-import withPWA from 'next-pwa';
+// next.config.mjs
+import withPWAInit from 'next-pwa';
 
 /** @type {import('next').NextConfig} */
-const nextConfig = withPWA({
-  dest: 'public', // Where the service worker and manifest are generated
+const baseConfig = {
+  reactStrictMode: true,
+};
+
+const withPWA = withPWAInit({
+  dest: 'public', // folder for service worker and manifest
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development', // disable PWA in dev mode
-})({
-  reactStrictMode: true,
+  disable: process.env.NODE_ENV === 'development', // disable in dev
 });
 
-export default nextConfig;
+export default withPWA(baseConfig);

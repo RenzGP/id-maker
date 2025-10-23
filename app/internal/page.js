@@ -223,10 +223,12 @@ export default function InternalPage() {
                   {/* Department label fills remaining space */}
                   <div className="flex-1 flex justify-center items-center">
                     <div
-                      className="rotate-[270deg] text-white font-extrabold leading-none text-center"
+                      className="rotate-[270deg] text-white font-extrabold leading-none text-center whitespace-nowrap overflow-hidden text-ellipsis"
                       style={{
                         letterSpacing: "0.5em",
                         fontSize: `${font_size_dept}px`,
+                        transformOrigin: "center center",
+                        maxWidth: "400px", //adjust if needed
                       }}
                     >
                       {department || "DEPARTMENT"}
