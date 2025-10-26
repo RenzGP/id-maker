@@ -56,6 +56,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased font-['Roboto',sans-serif]`}
       >
+        <RegisterSW />
         {children}
       </body>
     </html>
