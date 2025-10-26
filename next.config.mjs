@@ -2,6 +2,9 @@ import withPWA from "next-pwa";
 
 const nextConfig = {
   reactStrictMode: true,
+  experimental: {
+    optimizeCss: true,
+  },
 };
 
 export default withPWA({
@@ -9,7 +12,11 @@ export default withPWA({
   register: true,
   skipWaiting: true,
   disable: process.env.NODE_ENV === "development",
+  fallbacks: {
+    document: "/offline.html",
+  },
   runtimeCaching: [
+    // Cache Google Fonts
     {
       urlPattern: /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/.*/i,
       handler: "CacheFirst",
@@ -18,8 +25,30 @@ export default withPWA({
         expiration: { maxEntries: 20, maxAgeSeconds: 31536000 },
       },
     },
+
+    // Cache Next.js static files (_next/static/)
     {
-      urlPattern: /.*/i,
+      urlPattern: /^\/_next\/static\/.*/i,
+      handler: "CacheFirst",
+      options: {
+        cacheName: "next-static",
+        expiration: { maxEntries: 100, maxAgeSeconds: 31536000 },
+      },
+    },
+
+    // Cache images (CacheFirst for speed)
+    {
+      urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|ico)$/i,
+      handler: "CacheFirst",
+      options: {
+        cacheName: "images",
+        expiration: { maxEntries: 100, maxAgeSeconds: 2592000 }, // 30 days
+      },
+    },
+
+    // Cache other pages
+    {
+      urlPattern: /^https?.*/i,
       handler: "NetworkFirst",
       options: {
         cacheName: "pages",
@@ -28,9 +57,6 @@ export default withPWA({
       },
     },
   ],
-  fallbacks: {
-    document: "/offline.html",
-  },
   additionalManifestEntries: [
     { url: "/offline.html", revision: Date.now().toString() },
   ],
