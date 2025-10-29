@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import companyLogo from "@/public/company-logo-external.png";
+import companyLogo from "@/public/company-external.png";
 import hexBg from "@/public/hex-bg.png";
 import * as htmlToImage from "html-to-image";
 
@@ -13,6 +13,9 @@ export default function ExternalPage() {
   const [position, setPosition] = useState("");
   const [companyAssigned, setCompanyAssigned] = useState("");
   const [photo, setPhoto] = useState(null);
+  const [employee_signature, set_employee_signature] = useState("");
+  const [signature_width_employee, set_signature_width_employee] = useState(120);
+  const [signature_height_employee, set_signature_height_employee] = useState(40);
 
   // BACK SIDE FIELDS
   const [idNo, setIdNo] = useState("");
@@ -21,6 +24,9 @@ export default function ExternalPage() {
   const [emergencyName, setEmergencyName] = useState("");
   const [emergencyAddress, setEmergencyAddress] = useState("");
   const [emergencyContact, setEmergencyContact] = useState("");
+  const [charmaine_signature, set_charmaine_signature] = useState("")
+  const [signature_width_charmaine, set_signature_width_charmaine] = useState(160);
+  const [signature_height_charmaine, set_signature_height_charmaine] = useState(50);
 
   // FONT SIZE SLIDERS
   const [fullNameSize, setFullNameSize] = useState(16);
@@ -76,70 +82,96 @@ export default function ExternalPage() {
     };
 
     const printBothSides = async () => {
-      if (!idRef.current) return alert("No ID card to print");
+  if (!idRef.current) return alert("No card to print");
 
-      try {
-        await ensureImagesLoaded();
+  try {
+    await ensureImagesLoaded();
 
-        const frontShown = !showBack;
-        if (!frontShown) setShowBack(false);
-        await new Promise((r) => setTimeout(r, 300));
-        await ensureImagesLoaded();
+    const frontShown = !showBack;
+    if (!frontShown) setShowBack(false);
+    await new Promise((r) => setTimeout(r, 300));
+    await ensureImagesLoaded();
 
-        const frontData = await htmlToImage.toPng(idRef.current, {
-          cacheBust: true,
-          pixelRatio: 3,
-          backgroundColor: "white",
-          style: {
-            fontFamily: "Roboto, sans-serif, 'Font Awesome 6 Free'",
-          },
-        });
+    const frontData = await htmlToImage.toPng(idRef.current, {
+      cacheBust: true,
+      pixelRatio: 3,
+      backgroundColor: "white",
+      style: {
+        fontFamily: "Roboto, sans-serif, 'Font Awesome 6 Free'",
+      },
+    });
 
-        setShowBack(true);
-        await new Promise((r) => setTimeout(r, 300));
-        await ensureImagesLoaded();
+    setShowBack(true);
+    await new Promise((r) => setTimeout(r, 300));
+    await ensureImagesLoaded();
 
-        const backData = await htmlToImage.toPng(idRef.current, {
-          cacheBust: true,
-          pixelRatio: 3,
-          backgroundColor: "white",
-          style: {
-            fontFamily: "Roboto, sans-serif, 'Font Awesome 6 Free'",
-          },
-        });
+    const backData = await htmlToImage.toPng(idRef.current, {
+      cacheBust: true,
+      pixelRatio: 3,
+      backgroundColor: "white",
+      style: {
+        fontFamily: "Roboto, sans-serif, 'Font Awesome 6 Free'",
+      },
+    });
 
-        setShowBack(!frontShown);
+    setShowBack(!frontShown);
 
-        const printWindow = window.open("", "_blank");
-        if (!printWindow) return alert("Pop-up blocked.");
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) return alert("Pop-up blocked.");
 
-        printWindow.document.write(`
-          <html>
-            <head>
-              <title>Print ID</title>
-              <link rel="stylesheet" href="/fa/css/all.min.css">
-              <style>
-                @page { size: auto; margin: 0; }
-                body { margin: 0; display:flex; align-items:center; justify-content:center; height:100vh; background:white; }
-                .container { display:flex; gap:0.5in; }
-                img { width:2.125in; height:3.375in; object-fit:contain; }
-              </style>
-            </head>
-            <body>
-              <div class="container">
-                <img src="${frontData}" />
-                <img src="${backData}" />
-              </div>
-              <script>window.onload = () => { window.print(); }</script>
-            </body>
-          </html>
-        `);
-        printWindow.document.close();
-      } catch (err) {
-        console.error("Print error:", err);
-        alert("Printing failed — check console.");
-      }
-    };
+    // 🔧 Adjustable print constants
+    const CARD_WIDTH_IN = 2.2; 
+    const CARD_HEIGHT_IN = 3.375;
+    const GAP_IN = 0.5;
+    const PAGE_MARGIN_IN = 0.25; 
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print ID</title>
+          <link rel="stylesheet" href="/fa/css/all.min.css">
+          <style>
+            @page {
+              size: ${CARD_WIDTH_IN * 2 + GAP_IN + PAGE_MARGIN_IN * 2}in ${CARD_HEIGHT_IN + PAGE_MARGIN_IN * 2}in;
+              margin: ${PAGE_MARGIN_IN}in;
+            }
+            body {
+              margin: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              height: 100vh;
+              background: white;
+            }
+            .container {
+              display: flex;
+              flex-direction: row;
+              gap: ${GAP_IN}in;
+            }
+            img {
+              height: ${CARD_HEIGHT_IN}in;
+              object-fit: contain;
+              border: 1px solid #000;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <img src="${frontData}" />
+            <img src="${backData}" />
+          </div>
+          <script>window.onload = () => window.print();</script>
+        </body>
+      </html>
+    `);
+
+    printWindow.document.close();
+  } catch (err) {
+    console.error("Print error:", err);
+    alert("Printing failed — check console.");
+  }
+};
+
 
 const handlePhotoUpload = (e) => {
     const file = e.target.files[0];
@@ -149,6 +181,15 @@ const handlePhotoUpload = (e) => {
       reader.readAsDataURL(file);
     }
   };
+
+   // -------------------- SIGNATURE UPLOAD --------------------
+  const handle_signature_upload = (e, setter) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onloadend = () => setter(reader.result || "");
+  reader.readAsDataURL(file);
+};
 
 
   // FORMATTERS
@@ -258,10 +299,22 @@ const handlePhotoUpload = (e) => {
                     </p>
                   </div>
                 </div>
-
-                <div className="absolute bottom-[90px] w-full text-center">
-                  <div className="border-t border-gray-700 w-[180px] mx-auto mb-1"></div>
-                  <p className="text-[10px] text-gray-800">Signature</p>
+                
+                <div className="absolute bottom-[70px] w-full text-center text-black">
+                  {employee_signature && (
+                    <img
+                      src={employee_signature}
+                      alt="Employee Signature"
+                      className="mx-auto mb-1"
+                      style={{
+                        width: `${signature_width_employee}px`,
+                        height: `${signature_height_employee}px`,
+                        objectFit: "contain",
+                      }}
+                    />
+                  )}
+                  <div className="border-t border-black w-[120px] mx-auto" />
+                  <p className="text-[10px] mt-1">Signature</p>
                 </div>
 
                 <div className="absolute bottom-[20px] left-0 w-full bg-[#a6192e] text-white py-1.5 px-5">
@@ -331,12 +384,22 @@ const handlePhotoUpload = (e) => {
                   </p>
                 </div>
 
-                <div className="px-6 text-center mt-8 mb-4">
-                  <div className="border-t border-gray-700 w-[220px] mx-auto mb-1"></div>
-                  <p className="font-bold text-[11px] text-gray-900">
-                    CHARMAINE C. EDIRISINGHE
-                  </p>
-                  <p className="text-[9px] text-gray-700">Treasurer</p>
+                <div className="mt-10 flex flex-col items-center">
+                  {charmaine_signature && (
+                    <img
+                      src={charmaine_signature}
+                      alt="Charmaine Signature"
+                      className="mb-1"
+                      style={{
+                        width: `${signature_width_charmaine}px`,
+                        height: `${signature_height_charmaine}px`,
+                        objectFit: "contain",
+                      }}
+                    />
+                  )}
+                  <div className="border-t border-black w-[220px] mb-1" />
+                  <p className="font-bold text-[11px]">CHARMAINE C. EDIRISINGHE</p>
+                  <p className="text-[9px]">Treasurer</p>
                 </div>
 
                 <div className="absolute bottom-[20px] left-0 w-full bg-[#a6192e] text-white py-1.5 px-5">
@@ -425,6 +488,16 @@ const handlePhotoUpload = (e) => {
                 className="mb-2 w-full text-sm"
               />
 
+              <label className="block font-medium mb-1">
+                Upload Employee Signature
+                </label>
+                <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handle_signature_upload(e, set_employee_signature)}
+                className="w-full"
+              />
+
               {/* Front font size sliders (below front inputs) */}
               <div className="mt-3">
                 <label className="block font-medium mb-1">
@@ -502,6 +575,14 @@ const handlePhotoUpload = (e) => {
                 value={emergencyContact}
                 onChange={(e) => setEmergencyContact(format_contact(e.target.value))}
                 className="border w-full p-2 mb-3 rounded-md"
+              />
+
+              <label className="block font-medium mb-1">Upload Charmaine Signature</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handle_signature_upload(e, set_charmaine_signature)}
+                className="w-full"
               />
 
               {/* Back font size sliders (below back inputs) */}

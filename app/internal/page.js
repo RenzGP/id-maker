@@ -19,6 +19,9 @@ export default function InternalPage() {
   const [position, set_position] = useState("");
   const [id_no, set_id_no] = useState("");
   const [photo_url, set_photo_url] = useState("");
+  const [employee_signature, set_employee_signature] = useState("");
+  const [signature_width_employee, set_signature_width_employee] = useState(120);
+  const [signature_height_employee, set_signature_height_employee] = useState(40);
 
   // -------------------- BACK SIDE STATES --------------------
   const [sss_no, set_sss_no] = useState("");
@@ -26,6 +29,9 @@ export default function InternalPage() {
   const [emergency_name, set_emergency_name] = useState("");
   const [emergency_address, set_emergency_address] = useState("");
   const [emergency_contact, set_emergency_contact] = useState("");
+  const [charmaine_signature, set_charmaine_signature] = useState("")
+  const [signature_width_charmaine, set_signature_width_charmaine] = useState(160);
+  const [signature_height_charmaine, set_signature_height_charmaine] = useState(50);
 
   // -------------------- FONT SIZES --------------------
   const [font_size_dept, set_font_size_dept] = useState(26);
@@ -48,6 +54,15 @@ export default function InternalPage() {
     reader.onloadend = () => set_photo_url(reader.result || "");
     reader.readAsDataURL(file);
   };
+
+  // -------------------- SIGNATURE UPLOAD --------------------
+  const handle_signature_upload = (e, setter) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onloadend = () => setter(reader.result || "");
+  reader.readAsDataURL(file);
+};
 
   // -------------------- FORMATTERS --------------------
   const format_sss = (value) => {
@@ -111,65 +126,101 @@ export default function InternalPage() {
 
   // -------------------- PRINT BOTH SIDES --------------------
   const print_both_sides = async () => {
-    if (!card_ref.current) return alert("No card to print");
-    try {
-      await ensure_images_loaded();
+  if (!card_ref.current) return alert("No card to print");
 
-      const front_shown = !show_back;
-      if (!front_shown) set_show_back(false);
-      await new Promise((r) => setTimeout(r, 300));
-      await ensure_images_loaded();
+  try {
+    await ensure_images_loaded();
 
-      const front_data = await htmlToImage.toPng(card_ref.current, {
-        cacheBust: true,
-        pixelRatio: 3,
-        backgroundColor: "white",
-        style: { fontFamily: "Greycliff Arabic CF, sans-serif, 'Font Awesome 6 Free'" },
-      });
+    const front_shown = !show_back;
+    if (!front_shown) set_show_back(false);
+    await new Promise((r) => setTimeout(r, 300));
+    await ensure_images_loaded();
 
-      set_show_back(true);
-      await new Promise((r) => setTimeout(r, 300));
-      await ensure_images_loaded();
+    const front_data = await htmlToImage.toPng(card_ref.current, {
+      cacheBust: true,
+      pixelRatio: 3,
+      backgroundColor: "white",
+      style: {
+        fontFamily: "Greycliff Arabic CF, sans-serif, 'Font Awesome 6 Free'",
+      },
+    });
 
-      const back_data = await htmlToImage.toPng(card_ref.current, {
-        cacheBust: true,
-        pixelRatio: 3,
-        backgroundColor: "white",
-        style: { fontFamily: "Greycliff Arabic CF, sans-serif, 'Font Awesome 6 Free'" },
-      });
+    set_show_back(true);
+    await new Promise((r) => setTimeout(r, 300));
+    await ensure_images_loaded();
 
-      set_show_back(!front_shown);
+    const back_data = await htmlToImage.toPng(card_ref.current, {
+      cacheBust: true,
+      pixelRatio: 3,
+      backgroundColor: "white",
+      style: {
+        fontFamily: "Greycliff Arabic CF, sans-serif, 'Font Awesome 6 Free'",
+      },
+    });
 
-      const print_window = window.open("", "_blank");
-      if (!print_window) return alert("Pop-up blocked.");
+    // Restore previous state
+    set_show_back(!front_shown);
 
-      print_window.document.write(`
-        <html>
-          <head>
-            <title>Print ID</title>
-            <link rel="stylesheet" href="/fa/css/all.min.css">
-            <style>
-              @page { size: auto; margin: 0; }
-              body { margin: 0; display:flex; align-items:center; justify-content:center; height:100vh; background:white; }
-              .container { display:flex; gap:0.5in; }
-              img { width:2.125in; height:3.375in; object-fit:contain; }
-            </style>
-          </head>
-          <body>
-            <div class="container">
-              <img src="${front_data}" />
-              <img src="${back_data}" />
-            </div>
-            <script>window.onload = () => { window.print(); }</script>
-          </body>
-        </html>
-      `);
-      print_window.document.close();
-    } catch (err) {
-      console.error("Print error:", err);
-      alert("Printing failed — check console.");
-    }
-  };
+    // Open print window
+    const print_window = window.open("", "_blank");
+    if (!print_window) return alert("Pop-up blocked.");
+
+    // Constants for layout
+    const CARD_WIDTH_IN = 2.125; // wider look
+    const CARD_HEIGHT_IN = 3.375; // standard ID height
+    const GAP_IN = 0.5;
+    const PAGE_MARGIN_IN = 0.25;
+
+    // 🔹 HTML must be inside a template literal (backticks)
+    print_window.document.write(`
+      <html>
+        <head>
+          <title>Print ID</title>
+          <link rel="stylesheet" href="/fa/css/all.min.css">
+          <style>
+            @page {
+              size: ${CARD_WIDTH_IN * 2 + GAP_IN + PAGE_MARGIN_IN * 2}in ${CARD_HEIGHT_IN + PAGE_MARGIN_IN * 2}in;
+              margin: ${PAGE_MARGIN_IN}in;
+            }
+            body {
+              margin: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              height: 100vh;
+              background: white;
+            }
+            .container {
+              display: flex;
+              flex-direction: row;
+              gap: ${GAP_IN}in;
+            }
+            img {
+              width: ${CARD_WIDTH_IN}in;
+              height: ${CARD_HEIGHT_IN}in;
+              object-fit: contain;
+              border: 1px solid #000;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <img src="${front_data}" />
+            <img src="${back_data}" />
+          </div>
+          <script>
+            window.onload = () => window.print();
+          </script>
+        </body>
+      </html>
+    `);
+
+    print_window.document.close();
+  } catch (err) {
+    console.error("Print error:", err);
+    alert("Printing failed — check console.");
+  }
+};
 
   // -------------------- COMPONENT RENDER --------------------
   return (
@@ -297,12 +348,34 @@ export default function InternalPage() {
                       </div>
 
                       {/* ID Number */}
-                      <div className="text-center text-black mb-6">
+                      <div className="text-center text-black mb-2">
                         <p className="text-[11px]">{id_no || "ID NO"}</p>
                       </div>
 
                       {/* Signature Section */}
                       <div className="text-center text-black mt-6">
+                        {employee_signature ? (
+                          <img
+                            src={employee_signature}
+                            alt="Employee Signature"
+                            className="mx-auto mb-1"
+                            style={{
+                              width: `${signature_width_employee}px`,
+                              height: `${signature_height_employee}px`,
+                              objectFit: "contain",
+                            }}
+                          />
+                        ) : (
+                          <div
+                            className="mx-auto mb-1 flex items-center justify-center text-[9px] text-gray-500 border border-gray-300 rounded"
+                            style={{
+                              width: `${signature_width_employee}px`,
+                              height: `${signature_height_employee}px`,
+                            }}
+                          >
+                            Signature Here
+                          </div>
+                        )}
                         <div className="border-t border-black w-[120px] mx-auto" />
                         <p className="text-[10px] mt-1">Signature</p>
                       </div>
@@ -346,12 +419,34 @@ export default function InternalPage() {
                         </div>
 
                         <div className="mt-10 flex flex-col items-center">
+                          {charmaine_signature ? (
+                            <img
+                              src={charmaine_signature}
+                              alt="Charmaine Signature"
+                              className="mb-1"
+                              style={{
+                                width: `${signature_width_charmaine}px`,
+                                height: `${signature_height_charmaine}px`,
+                                objectFit: "contain",
+                              }}
+                            />
+                          ) : (
+                            <div
+                              className="mb-1 flex items-center justify-center text-[9px] text-gray-500 border border-gray-300 rounded"
+                              style={{
+                                width: `${signature_width_charmaine}px`,
+                                height: `${signature_height_charmaine}px`,
+                              }}
+                            >
+                              Charmaine Signature
+                            </div>
+                          )}
                           <div className="border-t border-black w-[220px] mb-1" />
-                          <p className="font-bold text-[11px]">
-                            CHARMAINE C. EDIRISINGHE
-                          </p>
+                          <p className="font-bold text-[11px]">CHARMAINE C. EDIRISINGHE</p>
                           <p className="text-[9px]">Treasurer</p>
                         </div>
+
+
                       </div>
                     </div>
                   )}
@@ -465,6 +560,17 @@ export default function InternalPage() {
                         className="w-full"
                       />
                     </div>
+                    <div>
+                    <label className="block font-medium mb-1">
+                      Upload Employee Signature
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handle_signature_upload(e, set_employee_signature)}
+                      className="w-full"
+                    />
+                  </div>
                     <div className="mt-3">
                       <label className="block font-medium mb-1">
                         Department Font Size: {font_size_dept}px
@@ -507,6 +613,29 @@ export default function InternalPage() {
                         }
                         className="w-full mb-1"
                       />
+                      {/* <p className="font-semibold text-[13px] mb-1">Employee Signature Size</p>
+                        <div className="flex flex-wrap gap-4">
+                          <label className="flex flex-col text-[12px]">
+                            Width: {signature_width_employee}px
+                            <input
+                              type="range"
+                              min="60"
+                              max="200"
+                              value={signature_width_employee}
+                              onChange={(e) => set_signature_width_employee(e.target.value)}
+                            />
+                          </label>
+                          <label className="flex flex-col text-[12px]">
+                            Height: {signature_height_employee}px
+                            <input
+                              type="range"
+                              min="20"
+                              max="100"
+                              value={signature_height_employee}
+                              onChange={(e) => set_signature_height_employee(e.target.value)}
+                            />
+                          </label>
+                        </div> */}
                     </div>
                   </div>
                 ) : (
@@ -574,6 +703,17 @@ export default function InternalPage() {
                         inputMode="numeric"
                       />
                     </div>
+                    <div className="mt-3">
+                      <label className="block font-medium mb-1">
+                        Upload Charmaine Signature
+                      </label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handle_signature_upload(e, set_charmaine_signature)}
+                        className="w-full"
+                      />
+                    </div>
                     <div>
                       <label className="block font-medium mb-1">
                         Back Font Size: {font_size_back}px
@@ -588,6 +728,29 @@ export default function InternalPage() {
                         }
                         className="w-full"
                       />
+                      {/* <p className="font-semibold text-[13px] mb-1">Charmaine Signature Size</p>
+                        <div className="flex flex-wrap gap-4">
+                          <label className="flex flex-col text-[12px]">
+                            Width: {signature_width_charmaine}px
+                            <input
+                              type="range"
+                              min="60"
+                              max="250"
+                              value={signature_width_charmaine}
+                              onChange={(e) => set_signature_width_charmaine(e.target.value)}
+                            />
+                          </label>
+                          <label className="flex flex-col text-[12px]">
+                            Height: {signature_height_charmaine}px
+                            <input
+                              type="range"
+                              min="20"
+                              max="120"
+                              value={signature_height_charmaine}
+                              onChange={(e) => set_signature_height_charmaine(e.target.value)}
+                            />
+                          </label>
+                        </div> */}
                     </div>
                   </div>
                 )}
