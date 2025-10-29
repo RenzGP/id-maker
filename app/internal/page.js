@@ -166,7 +166,7 @@ export default function InternalPage() {
     if (!print_window) return alert("Pop-up blocked.");
 
     // Constants for layout
-    const CARD_WIDTH_IN = 2.125; // wider look
+    const CARD_WIDTH_IN = 2.2; // wider look
     const CARD_HEIGHT_IN = 3.375; // standard ID height
     const GAP_IN = 0.5;
     const PAGE_MARGIN_IN = 0.25;
@@ -241,7 +241,7 @@ export default function InternalPage() {
           <div className="flex-shrink-0">
             <div
               ref={card_ref}
-              className="relative bg-white shadow-xl border w-[340px] h-[540px] rounded-md flex overflow-hidden"
+              className="relative bg-white shadow-xl border w-[360px] h-[550px] rounded-md flex overflow-hidden"
             >
               <div className="flex flex-col items-center relative" style={{ height: "100%" }}>
                 {/* Full vertical bar including logo */}

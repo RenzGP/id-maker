@@ -149,6 +149,7 @@ export default function ExternalPage() {
               gap: ${GAP_IN}in;
             }
             img {
+              width: ${CARD_WIDTH_IN}in;
               height: ${CARD_HEIGHT_IN}in;
               object-fit: contain;
               border: 1px solid #000;
@@ -232,7 +233,7 @@ const handlePhotoUpload = (e) => {
         <div className="flex justify-center">
           <div
             ref={idRef}
-            className="relative w-[340px] h-[520px] overflow-hidden bg-white"
+            className="relative w-[360px] h-[550px] overflow-hidden bg-white"
             style={{ boxSizing: "border-box" }}
           >
             {!showBack ? (
@@ -240,7 +241,7 @@ const handlePhotoUpload = (e) => {
               <div
                 key="front"
                 id="front-id"
-                className="relative bg-white w-[340px] h-[520px] shadow-2xl rounded-lg overflow-hidden border border-gray-300"
+                className="relative bg-white w-[360px] h-[550px] shadow-2xl rounded-lg overflow-hidden border border-gray-300"
               >
                 <div className="absolute left-[25px] top-[150px] bottom-0 w-[2px] bg-blue-900"></div>
 
@@ -333,7 +334,7 @@ const handlePhotoUpload = (e) => {
               <div
                 key="back"
                 id="back-id"
-                className="relative bg-white w-[340px] h-[520px] shadow-2xl rounded-lg overflow-hidden border border-gray-300"
+                className="relative bg-white w-[360px] h-[550px] shadow-2xl rounded-lg overflow-hidden border border-gray-300"
               >
                 <div className="absolute left-[24px] top-[150px] bottom-0 w-[2px] bg-blue-900"></div>
 
