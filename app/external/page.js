@@ -306,11 +306,11 @@ const handlePhotoUpload = (e) => {
                     <img
                       src={employee_signature}
                       alt="Employee Signature"
-                      className="mx-auto mb-1"
+                      className="mx-auto mt-1"
                       style={{
                         width: `${signature_width_employee}px`,
                         height: `${signature_height_employee}px`,
-                        objectFit: "contain",
+                        position: "relative",
                       }}
                     />
                   )}
@@ -385,7 +385,7 @@ const handlePhotoUpload = (e) => {
                   </p>
                 </div>
 
-                <div className="mt-10 flex flex-col items-center">
+                <div className="mt-2 flex flex-col items-center">
                   {charmaine_signature && (
                     <img
                       src={charmaine_signature}
@@ -394,7 +394,7 @@ const handlePhotoUpload = (e) => {
                       style={{
                         width: `${signature_width_charmaine}px`,
                         height: `${signature_height_charmaine}px`,
-                        objectFit: "contain",
+                        position: "relative",
                       }}
                     />
                   )}
@@ -524,6 +524,29 @@ const handlePhotoUpload = (e) => {
                   onChange={(e) => setPositionSize(Number(e.target.value))}
                   className="w-full mb-1"
                 />
+                <p className="font-semibold text-[13px] mb-1">Employee Signature Size</p>
+                  <div className="flex flex-wrap gap-4">
+                    <label className="flex flex-col text-[12px]">
+                      Width: {signature_width_employee}px
+                        <input
+                          type="range"
+                          min="60"
+                          max="230"
+                          value={signature_width_employee}
+                          onChange={(e) => set_signature_width_employee(e.target.value)}
+                        />
+                    </label>
+                    <label className="flex flex-col text-[12px]">
+                      Height: {signature_height_employee}px
+                        <input
+                          type="range"
+                          min="20"
+                          max="120"
+                          value={signature_height_employee}
+                          onChange={(e) => set_signature_height_employee(e.target.value)}
+                        />
+                    </label>
+                  </div>
               </div>
             </div>
           ) : (
@@ -611,6 +634,30 @@ const handlePhotoUpload = (e) => {
                   onChange={(e) => setBackEmergencySize(Number(e.target.value))}
                   className="w-full mb-1"
                 />
+
+                <p className="font-semibold text-[13px] mb-1">Charmaine Signature Size</p>
+                  <div className="flex flex-wrap gap-4">
+                    <label className="flex flex-col text-[12px]">
+                      Width: {signature_width_charmaine}px
+                      <input
+                        type="range"
+                        min="60"
+                        max="250"
+                        value={signature_width_charmaine}
+                        onChange={(e) => set_signature_width_charmaine(e.target.value)}
+                      />
+                    </label>
+                    <label className="flex flex-col text-[12px]">
+                      Height: {signature_height_charmaine}px
+                        <input
+                          type="range"
+                          min="20"
+                          max="120"
+                          value={signature_height_charmaine}
+                          onChange={(e) => set_signature_height_charmaine(e.target.value)}
+                      />
+                    </label>
+                </div>
               </div>
             </div>
           )}

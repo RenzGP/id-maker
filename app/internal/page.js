@@ -353,33 +353,57 @@ export default function InternalPage() {
                       </div>
 
                       {/* Signature Section */}
-                      <div className="text-center text-black mt-6">
-                        {employee_signature ? (
-                          <img
-                            src={employee_signature}
-                            alt="Employee Signature"
-                            className="mx-auto mb-1"
-                            style={{
-                              width: `${signature_width_employee}px`,
-                              height: `${signature_height_employee}px`,
-                              objectFit: "contain",
-                            }}
-                          />
-                        ) : (
-                          <div
-                            className="mx-auto mb-1 flex items-center justify-center text-[9px] text-gray-500 border border-gray-300 rounded"
-                            style={{
-                              width: `${signature_width_employee}px`,
-                              height: `${signature_height_employee}px`,
-                            }}
-                          >
-                            Signature Here
-                          </div>
-                        )}
-                        <div className="border-t border-black w-[120px] mx-auto" />
-                        <p className="text-[10px] mt-1">Signature</p>
-                      </div>
+                     <div
+                        className="text-center text-black mt-3 relative"
+                        style={{
+                          height: "80px", // fixed height area for signature and label
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <div
+                          className="relative"
+                          style={{
+                            width: `${signature_width_employee}px`,
+                            height: `${signature_height_employee + 25}px`, // extra space for label area
+                            position: "relative",
+                          }}
+                        >
+                          {employee_signature ? (
+                            <img
+                              src={employee_signature}
+                              alt="Employee Signature"
+                              className="absolute top-0 left-0 right-0 mx-auto"
+                              style={{
+                                width: `${signature_width_employee}px`,
+                                height: `${signature_height_employee}px`,
+                                objectFit: "contain",
+                              }}
+                            />
+                          ) : (
+                            <div
+                              className="absolute top-1 left-0 right-0 mx-auto flex items-center justify-center text-[9px] text-gray-500 border border-gray-300 rounded"
+                              style={{
+                                width: `${signature_width_employee}px`,
+                                height: `${signature_height_employee}px`,
+                              }}
+                            >
+                              Signature Here
+                            </div>
+                          )}
 
+                          {/* Fixed bottom line and label */}
+                          <div
+                            className="absolute bottom-0 left-1/2 -translate-x-1/2 text-center"
+                            style={{ width: "120px" }}
+                          >
+                            <div className="border-t border-black w-full mx-auto" />
+                            <p className="text-[10px] mt-1">Signature</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   ) : (
                     <div className="flex flex-col justify-start w-[260px] p-5 pl-6 relative">
@@ -613,14 +637,14 @@ export default function InternalPage() {
                         }
                         className="w-full mb-1"
                       />
-                      {/* <p className="font-semibold text-[13px] mb-1">Employee Signature Size</p>
+                      <p className="font-semibold text-[13px] mb-1">Employee Signature Size</p>
                         <div className="flex flex-wrap gap-4">
                           <label className="flex flex-col text-[12px]">
                             Width: {signature_width_employee}px
                             <input
                               type="range"
                               min="60"
-                              max="200"
+                              max="230"
                               value={signature_width_employee}
                               onChange={(e) => set_signature_width_employee(e.target.value)}
                             />
@@ -630,12 +654,12 @@ export default function InternalPage() {
                             <input
                               type="range"
                               min="20"
-                              max="100"
+                              max="120"
                               value={signature_height_employee}
                               onChange={(e) => set_signature_height_employee(e.target.value)}
                             />
                           </label>
-                        </div> */}
+                        </div>
                     </div>
                   </div>
                 ) : (
@@ -728,7 +752,7 @@ export default function InternalPage() {
                         }
                         className="w-full"
                       />
-                      {/* <p className="font-semibold text-[13px] mb-1">Charmaine Signature Size</p>
+                      <p className="font-semibold text-[13px] mb-1">Charmaine Signature Size</p>
                         <div className="flex flex-wrap gap-4">
                           <label className="flex flex-col text-[12px]">
                             Width: {signature_width_charmaine}px
@@ -750,7 +774,7 @@ export default function InternalPage() {
                               onChange={(e) => set_signature_height_charmaine(e.target.value)}
                             />
                           </label>
-                        </div> */}
+                        </div>
                     </div>
                   </div>
                 )}
