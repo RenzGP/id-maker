@@ -356,7 +356,7 @@ export default function InternalPage() {
                      <div
                         className="text-center text-black mt-3 relative"
                         style={{
-                          height: "80px", // fixed height area for signature and label
+                          height: "60px", // fixed height area for signature and label
                           display: "flex",
                           flexDirection: "column",
                           alignItems: "center",
@@ -375,11 +375,13 @@ export default function InternalPage() {
                             <img
                               src={employee_signature}
                               alt="Employee Signature"
-                              className="absolute top-0 left-0 right-0 mx-auto"
+                              className="absolute left-0 right-0 mx-auto"
                               style={{
+                                bottom: signature_height_employee <= 100 ? "0px" : "-30px",
                                 width: `${signature_width_employee}px`,
                                 height: `${signature_height_employee}px`,
                                 objectFit: "contain",
+                                position: "absolute",
                               }}
                             />
                           ) : (
@@ -442,12 +444,27 @@ export default function InternalPage() {
                           REQUIREMENT FOR CLEARANCE.
                         </div>
 
-                        <div className="mt-10 flex flex-col items-center">
+                        <div className="text-center text-black mt-3 relative"
+                        style={{
+                          height: "80px", // fixed height area for signature and label
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "flex-end",
+                        }}>
+                          <div
+                          className="relative"
+                          style={{
+                            width: `${signature_width_charmaine}px`,
+                            height: `${signature_height_charmaine + 25}px`, // extra space for label area
+                            position: "relative",
+                          }}
+                        >
                           {charmaine_signature ? (
                             <img
                               src={charmaine_signature}
                               alt="Charmaine Signature"
-                              className="mb-1"
+                              className="absolute top-0 left-0 right-0 mx-auto"
                               style={{
                                 width: `${signature_width_charmaine}px`,
                                 height: `${signature_height_charmaine}px`,
@@ -456,7 +473,7 @@ export default function InternalPage() {
                             />
                           ) : (
                             <div
-                              className="mb-1 flex items-center justify-center text-[9px] text-gray-500 border border-gray-300 rounded"
+                              className="absolute top-1 left-0 right-0 mx-auto flex items-center justify-center text-[9px] text-gray-500 border border-gray-300 rounded"
                               style={{
                                 width: `${signature_width_charmaine}px`,
                                 height: `${signature_height_charmaine}px`,
@@ -465,11 +482,16 @@ export default function InternalPage() {
                               Charmaine Signature
                             </div>
                           )}
-                          <div className="border-t border-black w-[220px] mb-1" />
-                          <p className="font-bold text-[11px]">CHARMAINE C. EDIRISINGHE</p>
+                          <div
+                            className="absolute bottom-[-10px] left-1/2 -translate-x-1/2 text-center"
+                            style={{ width: "150px" }}
+                          >
+                          <div className="border-t border-black w-full mx-auto" />
+                          <p className="font-bold text-[10px] mt-1">CHARMAINE C. EDIRISINGHE</p>
                           <p className="text-[9px]">Treasurer</p>
                         </div>
-
+                        </div>
+                        </div>
 
                       </div>
                     </div>
@@ -654,7 +676,7 @@ export default function InternalPage() {
                             <input
                               type="range"
                               min="20"
-                              max="120"
+                              max="130"
                               value={signature_height_employee}
                               onChange={(e) => set_signature_height_employee(e.target.value)}
                             />

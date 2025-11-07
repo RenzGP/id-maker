@@ -314,8 +314,13 @@ const handlePhotoUpload = (e) => {
                       }}
                     />
                   )}
-                  <div className="border-t border-black w-[120px] mx-auto" />
-                  <p className="text-[10px] mt-1">Signature</p>
+                  <div
+                    className="absolute bottom-0 left-1/2 -translate-x-1/2 text-center"
+                    style={{ width: "120px" }}
+                  >
+                    <div className="border-t border-black w-full mx-auto" />
+                    <p className="text-[10px] mt-1">Signature</p>
+                  </div>
                 </div>
 
                 <div className="absolute bottom-[20px] left-0 w-full bg-[#a6192e] text-white py-1.5 px-5">
@@ -385,23 +390,54 @@ const handlePhotoUpload = (e) => {
                   </p>
                 </div>
 
-                <div className="mt-2 flex flex-col items-center">
-                  {charmaine_signature && (
-                    <img
-                      src={charmaine_signature}
-                      alt="Charmaine Signature"
-                      className="mb-1"
-                      style={{
-                        width: `${signature_width_charmaine}px`,
-                        height: `${signature_height_charmaine}px`,
-                        position: "relative",
-                      }}
-                    />
-                  )}
-                  <div className="border-t border-black w-[220px] mb-1" />
-                  <p className="font-bold text-[11px]">CHARMAINE C. EDIRISINGHE</p>
-                  <p className="text-[9px]">Treasurer</p>
-                </div>
+                <div className="text-center text-black mt-3 relative"
+                        style={{
+                          height: "80px", // fixed height area for signature and label
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "flex-end",
+                        }}>
+                          <div
+                          className="relative"
+                          style={{
+                            width: `${signature_width_charmaine}px`,
+                            height: `${signature_height_charmaine + 25}px`, // extra space for label area
+                            position: "relative",
+                          }}
+                        >
+                          {charmaine_signature ? (
+                            <img
+                              src={charmaine_signature}
+                              alt="Charmaine Signature"
+                              className="absolute top-0 left-0 right-0 mx-auto"
+                              style={{
+                                width: `${signature_width_charmaine}px`,
+                                height: `${signature_height_charmaine}px`,
+                                objectFit: "contain",
+                              }}
+                            />
+                          ) : (
+                            <div
+                              className="absolute top-1 left-0 right-0 mx-auto flex items-center justify-center text-[9px] text-gray-500 border border-gray-300 rounded"
+                              style={{
+                                width: `${signature_width_charmaine}px`,
+                                height: `${signature_height_charmaine}px`,
+                              }}
+                            >
+                              Charmaine Signature
+                            </div>
+                          )}
+                          <div
+                            className="absolute bottom-[-10px] left-1/2 -translate-x-1/2 text-center"
+                            style={{ width: "150px" }}
+                          >
+                          <div className="border-t border-black w-full mx-auto" />
+                          <p className="font-bold text-[10px] mt-1">CHARMAINE C. EDIRISINGHE</p>
+                          <p className="text-[9px]">Treasurer</p>
+                        </div>
+                        </div>
+                        </div>
 
                 <div className="absolute bottom-[20px] left-0 w-full bg-[#a6192e] text-white py-1.5 px-5">
                   <p className="text-[9.5px] font-medium flex items-center gap-2">
