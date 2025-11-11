@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import * as htmlToImage from "html-to-image";
+import charSig from "@/public/char_signature.png";
 import html2canvas from "html2canvas";
 import company_logo from "@/public/company-logo.jpg";
 
@@ -460,28 +461,18 @@ export default function InternalPage() {
                             position: "relative",
                           }}
                         >
-                          {charmaine_signature ? (
-                            <img
-                              src={charmaine_signature}
-                              alt="Charmaine Signature"
-                              className="absolute top-0 left-0 right-0 mx-auto"
-                              style={{
-                                width: `${signature_width_charmaine}px`,
-                                height: `${signature_height_charmaine}px`,
-                                objectFit: "contain",
+                          <Image
+                            src={charSig}
+                            alt="Charmaine Signature"
+                            className="absolute top-0 left-0 right-0 mx-auto"
+                            style={{
+                              width: `${signature_width_charmaine}px`,
+                              height: `${signature_height_charmaine}px`,
+                              objectFit: "contain",
                               }}
-                            />
-                          ) : (
-                            <div
-                              className="absolute top-1 left-0 right-0 mx-auto flex items-center justify-center text-[9px] text-gray-500 border border-gray-300 rounded"
-                              style={{
-                                width: `${signature_width_charmaine}px`,
-                                height: `${signature_height_charmaine}px`,
-                              }}
-                            >
-                              Charmaine Signature
-                            </div>
-                          )}
+                            priority
+                            unoptimized
+                          />
                           <div
                             className="absolute bottom-[-10px] left-1/2 -translate-x-1/2 text-center"
                             style={{ width: "150px" }}
@@ -747,17 +738,6 @@ export default function InternalPage() {
                         }
                         className="border w-full p-2 mb-3 rounded-md"
                         inputMode="numeric"
-                      />
-                    </div>
-                    <div className="mt-3">
-                      <label className="block font-medium mb-1">
-                        Upload Charmaine Signature
-                      </label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handle_signature_upload(e, set_charmaine_signature)}
-                        className="w-full"
                       />
                     </div>
                     <div>
