@@ -120,7 +120,7 @@ export default function ExternalPage() {
     if (!printWindow) return alert("Pop-up blocked.");
 
     // 🔧 Adjustable print constants
-    const CARD_WIDTH_IN = 2.2; 
+    const CARD_WIDTH_IN = 2.3; 
     const CARD_HEIGHT_IN = 3.375;
     const GAP_IN = 0.5;
     const PAGE_MARGIN_IN = 0.25; 
@@ -233,7 +233,7 @@ const handlePhotoUpload = (e) => {
         <div className="flex justify-center">
           <div
             ref={idRef}
-            className="relative w-[360px] h-[550px] overflow-hidden bg-white"
+            className="relative w-[370px] h-[550px] overflow-hidden bg-white"
             style={{ boxSizing: "border-box" }}
           >
             {!showBack ? (
