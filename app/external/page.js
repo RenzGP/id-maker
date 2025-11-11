@@ -342,8 +342,8 @@ const handlePhotoUpload = (e) => {
                     <i className="fa-solid fa-phone"></i>
                     Tel. 8937307; 8122608; 8122022
                   </p>
-                </div>
-              </div> */}
+                </div>  */}
+              </div>
             ) : (
               /* BACK SIDE */
               <div
