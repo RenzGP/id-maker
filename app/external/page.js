@@ -270,12 +270,18 @@ const handlePhotoUpload = (e) => {
                   />
                 </div>
 
-                <div className="absolute top-[130px] w-full text-center z-10 leading-tight">
-                  <p className="text-[15px] font-semibold text-gray-800 tracking-widest">
+                <div className="absolute top-[90px] w-full text-center z-10 leading-tight">
+                  <p className="text-[20px] font-semibold text-gray-800 tracking-widest">
                     WORKSAVERS
                   </p>
-                  <p className="text-[15px] font-semibold text-gray-800 tracking-widest">
+                  <p className="text-[20px] font-semibold text-gray-800 tracking-widest">
                     PERSONNEL SVCS., INC.
+                  </p>
+                    <p className="text-[10px] font-medium flex items-center gap-2">
+                    7827 Worksavers Bldg., S. Javier St., Pio Del Pilar, Makati City
+                  </p>
+                  <p className="text-[10px] flex items-center gap-2">
+                    Tel. 8937307; 8122608; 8122022
                   </p>
                 </div>
 
