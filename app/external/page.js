@@ -277,10 +277,10 @@ const handlePhotoUpload = (e) => {
                   <p className="text-[20px] font-semibold text-gray-800 tracking-widest">
                     PERSONNEL SVCS., INC.
                   </p>
-                    <p className="text-[10px] font-medium flex items-center gap-2">
+                    <p className="text-[10px] font-medium text-gray-800 tracking-widest">
                     7827 Worksavers Bldg., S. Javier St., Pio Del Pilar, Makati City
                   </p>
-                  <p className="text-[10px] flex items-center gap-2">
+                  <p className="text-[10px] font-medium text-gray-800 tracking-widest">
                     Tel. 8937307; 8122608; 8122022
                   </p>
                 </div>
@@ -328,7 +328,7 @@ const handlePhotoUpload = (e) => {
                     <p className="text-[10px] mt-1">Signature</p>
                   </div>
                 </div>
-
+                 {/*
                 <div className="absolute bottom-[20px] left-0 w-full bg-[#a6192e] text-white py-1.5 px-5">
                   <p className="text-[9.5px] font-medium flex items-center gap-2">
                     <i className="fa-solid fa-location-dot"></i>
@@ -339,7 +339,7 @@ const handlePhotoUpload = (e) => {
                     Tel. 8937307; 8122608; 8122022
                   </p>
                 </div>
-              </div>
+              </div> */}
             ) : (
               /* BACK SIDE */
               <div
@@ -444,7 +444,7 @@ const handlePhotoUpload = (e) => {
                         </div>
                         </div>
                         </div>
-
+                {/*
                 <div className="absolute bottom-[20px] left-0 w-full bg-[#a6192e] text-white py-1.5 px-5">
                   <p className="text-[9.5px] font-medium flex items-center gap-2">
                     <i className="fa-solid fa-location-dot"></i>
@@ -454,7 +454,7 @@ const handlePhotoUpload = (e) => {
                     <i className="fa-solid fa-phone"></i>
                     Tel. 8937307; 8122608; 8122022
                   </p>
-                </div>
+                </div>  */}
               </div>
             )}
           </div>
