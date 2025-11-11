@@ -286,11 +286,14 @@ const handlePhotoUpload = (e) => {
                 </div>
 
                 <div className="absolute left-1/2 top-[180px] -translate-x-1/2 flex flex-col items-center text-center z-10">
-                  <div className="w-[130px] h-[130px] border-[3px] border-gray-400 rounded-md overflow-hidden mb-3 flex items-center justify-center bg-gray-200">
+                  <div
+                    className="border-[3px] border-gray-400 rounded-md overflow-hidden mb-3 flex items-center justify-center bg-gray-200"
+                    style={{ width: "2in", height: "2in" }}
+                  >
                     {photo ? (
                       <img src={photo} alt="Uploaded" className="object-cover w-full h-full" />
                     ) : (
-                      <p className="text-[10px] text-gray-500">Photasdo Here</p>
+                      <p className="text-[10px] text-gray-500">Photo Here</p>
                     )}
                   </div>
 
