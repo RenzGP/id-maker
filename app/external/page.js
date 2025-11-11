@@ -332,7 +332,7 @@ const handlePhotoUpload = (e) => {
                     <p className="text-[10px] mt-1">Signature</p>
                   </div>
                 </div>
-                 {/*
+
                 <div className="absolute bottom-[20px] left-0 w-full bg-[#a6192e] text-white py-1.5 px-5">
                   <p className="text-[9.5px] font-medium flex items-center gap-2">
                     <i className="fa-solid fa-location-dot"></i>
@@ -342,7 +342,7 @@ const handlePhotoUpload = (e) => {
                     <i className="fa-solid fa-phone"></i>
                     Tel. 8937307; 8122608; 8122022
                   </p>
-                </div>  */}
+                </div> 
               </div>
             ) : (
               /* BACK SIDE */
