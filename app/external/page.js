@@ -277,25 +277,21 @@ const handlePhotoUpload = (e) => {
                   <p className="text-[20px] font-semibold text-gray-800 tracking-widest">
                     PERSONNEL SVCS., INC.
                   </p>
-                    <p className="text-[10px] font-medium text-gray-800 tracking-widest">
+                    <p className="text-[10px] font-medium flex items-center gap-2">
                     7827 Worksavers Bldg., S. Javier St., Pio Del Pilar, Makati City
                   </p>
-                  <p className="text-[10px] font-medium text-gray-800 tracking-widest">
+                  <p className="text-[10px] flex items-center gap-2">
                     Tel. 8937307; 8122608; 8122022
                   </p>
                 </div>
 
                 <div className="absolute left-1/2 top-[180px] -translate-x-1/2 flex flex-col items-center text-center z-10">
-                  <div className="border-[3px] border-[#a6033f] rounded-[24px] w-[192px] h-[192px] flex items-center justify-center overflow-hidden bg-gray-200 mb-3">
-                        {photo_url ? (
-                          <img
-                            src={photo_url}
-                            alt="Uploaded"
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="text-xs text-gray-600">Photoasss Here</div>
-                        )}
+                  <div className="w-[130px] h-[130px] border-[3px] border-gray-400 rounded-md overflow-hidden mb-3 flex items-center justify-center bg-gray-200">
+                    {photo ? (
+                      <img src={photo} alt="Uploaded" className="object-cover w-full h-full" />
+                    ) : (
+                      <p className="text-[10px] text-gray-500">Photo Here</p>
+                    )}
                   </div>
 
                   <div className="mt-1">
@@ -342,7 +338,7 @@ const handlePhotoUpload = (e) => {
                     <i className="fa-solid fa-phone"></i>
                     Tel. 8937307; 8122608; 8122022
                   </p>
-                </div> 
+                </div>
               </div>
             ) : (
               /* BACK SIDE */
@@ -448,7 +444,7 @@ const handlePhotoUpload = (e) => {
                         </div>
                         </div>
                         </div>
-                
+
                 <div className="absolute bottom-[20px] left-0 w-full bg-[#a6192e] text-white py-1.5 px-5">
                   <p className="text-[9.5px] font-medium flex items-center gap-2">
                     <i className="fa-solid fa-location-dot"></i>
