@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import companyLogo from "@/public/company-external.png";
+import charSig from "@/public/char_signature.png";
 import hexBg from "@/public/hex-bg.png";
 import * as htmlToImage from "html-to-image";
 
@@ -420,28 +421,18 @@ const handlePhotoUpload = (e) => {
                             position: "relative",
                           }}
                         >
-                          {charmaine_signature ? (
-                            <img
-                              src={charmaine_signature}
-                              alt="Charmaine Signature"
-                              className="absolute top-0 left-0 right-0 mx-auto"
-                              style={{
-                                width: `${signature_width_charmaine}px`,
-                                height: `${signature_height_charmaine}px`,
-                                objectFit: "contain",
-                              }}
-                            />
-                          ) : (
-                            <div
-                              className="absolute top-1 left-0 right-0 mx-auto flex items-center justify-center text-[9px] text-gray-500 border border-gray-300 rounded"
-                              style={{
-                                width: `${signature_width_charmaine}px`,
-                                height: `${signature_height_charmaine}px`,
-                              }}
-                            >
-                              Charmaine Signature
-                            </div>
-                          )}
+                         <Image
+                            src={charSig}
+                            alt="Charmaine Signature"
+                            className="absolute top-0 left-0 right-0 mx-auto"
+                            style={{
+                              width: `${signature_width_charmaine}px`,
+                              height: `${signature_height_charmaine}px`,
+                              objectFit: "contain",
+                            }}
+                            priority
+                            unoptimized
+                          />
                           <div
                             className="absolute bottom-[-10px] left-1/2 -translate-x-1/2 text-center"
                             style={{ width: "150px" }}
@@ -651,14 +642,6 @@ const handlePhotoUpload = (e) => {
                 value={emergencyContact}
                 onChange={(e) => setEmergencyContact(format_contact(e.target.value))}
                 className="border w-full p-2 mb-3 rounded-md"
-              />
-
-              <label className="block font-medium mb-1">Upload Charmaine Signature</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => handle_signature_upload(e, set_charmaine_signature)}
-                className="w-full"
               />
 
               {/* Back font size sliders (below back inputs) */}
