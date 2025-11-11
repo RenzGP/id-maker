@@ -245,7 +245,7 @@ const handlePhotoUpload = (e) => {
               >
                 <div className="absolute left-[25px] top-[150px] bottom-0 w-[2px] bg-blue-900"></div>
 
-                {/* Hex pattern LEFT */}
+                {/* Hex pattern LEFT 
                 <div className="absolute top-0 left-0 w-[180px] h-[140px] opacity-90 z-0">
                   <Image
                     src={hexBg}
@@ -255,7 +255,7 @@ const handlePhotoUpload = (e) => {
                     priority={true}
                     unoptimized={true}
                   />
-                </div>
+                </div> */}
 
                 {/* Company logo RIGHT */}
                 <div className="absolute top-3 right-3 z-10">
