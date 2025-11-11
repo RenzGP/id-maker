@@ -120,7 +120,7 @@ export default function ExternalPage() {
     if (!printWindow) return alert("Pop-up blocked.");
 
     // 🔧 Adjustable print constants
-    const CARD_WIDTH_IN = 2.2; 
+    const CARD_WIDTH_IN = 2.3; 
     const CARD_HEIGHT_IN = 3.375;
     const GAP_IN = 0.5;
     const PAGE_MARGIN_IN = 0.25; 
@@ -241,7 +241,7 @@ const handlePhotoUpload = (e) => {
               <div
                 key="front"
                 id="front-id"
-                className="relative bg-white w-[360px] h-[550px] shadow-2xl rounded-lg overflow-hidden border border-gray-300"
+                className="relative bg-white w-[370px] h-[550px] shadow-2xl rounded-lg overflow-hidden border border-gray-300"
               >
                 <div className="absolute left-[25px] top-[150px] bottom-0 w-[2px] bg-blue-900"></div>
 
