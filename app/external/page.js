@@ -277,10 +277,10 @@ const handlePhotoUpload = (e) => {
                   <p className="text-[20px] font-semibold text-gray-800 tracking-widest">
                     PERSONNEL SVCS., INC.
                   </p>
-                    <p className="text-[10px] font-medium flex items-center gap-2">
+                    <p className="text-[10px] font-medium text-gray-800 tracking-widest">
                     7827 Worksavers Bldg., S. Javier St., Pio Del Pilar, Makati City
                   </p>
-                  <p className="text-[10px] flex items-center gap-2">
+                  <p className="text-[10px] font-medium text-gray-800 tracking-widest">
                     Tel. 8937307; 8122608; 8122022
                   </p>
                 </div>
@@ -354,7 +354,7 @@ const handlePhotoUpload = (e) => {
               >
                 <div className="absolute left-[24px] top-[150px] bottom-0 w-[2px] bg-blue-900"></div>
 
-                {/* Hex pattern only (no logo) */}
+                {/* Hex pattern only (no logo) 
                 <div className="absolute top-0 left-0 w-[180px] h-[140px] opacity-90">
                   <Image
                     src={hexBg}
@@ -364,7 +364,7 @@ const handlePhotoUpload = (e) => {
                     priority={true}
                     unoptimized={true}
                   />
-                </div>
+                </div> */}
 
                 <div className="px-10 pt-36 text-[11px] text-gray-800 leading-relaxed z-10">
                   <p style={{ fontSize: `${backDetailsSize}px` }}>
