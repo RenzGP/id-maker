@@ -313,7 +313,7 @@ const handlePhotoUpload = (e) => {
                   </div>
                 </div>
                 
-                <div className="absolute bottom-[90px] w-full text-center text-black">
+                <div className="absolute bottom-[50px] w-full text-center text-black">
                   {employee_signature && (
                     <img
                       src={employee_signature}
