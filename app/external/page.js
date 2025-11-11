@@ -120,7 +120,7 @@ export default function ExternalPage() {
     if (!printWindow) return alert("Pop-up blocked.");
 
     // 🔧 Adjustable print constants
-    const CARD_WIDTH_IN = 2.3; 
+    const CARD_WIDTH_IN = 2.2; 
     const CARD_HEIGHT_IN = 3.375;
     const GAP_IN = 0.5;
     const PAGE_MARGIN_IN = 0.25; 
@@ -233,7 +233,7 @@ const handlePhotoUpload = (e) => {
         <div className="flex justify-center">
           <div
             ref={idRef}
-            className="relative w-[370px] h-[550px] overflow-hidden bg-white"
+            className="relative w-[360px] h-[550px] overflow-hidden bg-white"
             style={{ boxSizing: "border-box" }}
           >
             {!showBack ? (
@@ -243,7 +243,7 @@ const handlePhotoUpload = (e) => {
                 id="front-id"
                 className="relative bg-white w-[360px] h-[550px] shadow-2xl rounded-lg overflow-hidden border border-gray-300"
               >
-              /*  <div className="absolute left-[25px] top-[150px] bottom-0 w-[2px] bg-blue-900"></div> */
+                <div className="absolute left-[25px] top-[150px] bottom-0 w-[2px] bg-blue-900"></div>
 
                 {/* Hex pattern LEFT 
                 <div className="absolute top-0 left-0 w-[180px] h-[140px] opacity-90 z-0">
@@ -355,7 +355,7 @@ const handlePhotoUpload = (e) => {
                 id="back-id"
                 className="relative bg-white w-[360px] h-[550px] shadow-2xl rounded-lg overflow-hidden border border-gray-300"
               >
-               /* <div className="absolute left-[24px] top-[150px] bottom-0 w-[2px] bg-blue-900"></div> */
+                <div className="absolute left-[24px] top-[150px] bottom-0 w-[2px] bg-blue-900"></div>
 
                 {/* Hex pattern only (no logo) 
                 <div className="absolute top-0 left-0 w-[180px] h-[140px] opacity-90">
