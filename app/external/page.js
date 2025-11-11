@@ -270,7 +270,7 @@ const handlePhotoUpload = (e) => {
                   />
                 </div>
 
-                <div className="absolute top-[60px] w-full text-center z-10 leading-tight">
+                <div className="absolute top-[70px] w-full text-center z-10 leading-tight">
                   <p className="text-[20px] font-semibold text-gray-800 tracking-widest">
                     WORKSAVERS
                   </p>
@@ -278,7 +278,10 @@ const handlePhotoUpload = (e) => {
                     PERSONNEL SVCS., INC.
                   </p>
                     <p className="text-[10px] font-medium text-gray-800 tracking-widest">
-                    7827 Worksavers Bldg., S. Javier St., Pio Del Pilar, Makati City
+                    7827 Worksavers Bldg., S. Javier St.
+                  </p>
+                      <p className="text-[10px] font-medium text-gray-800 tracking-widest">
+                    Brgy. Pio Del Pilar, Makati City
                   </p>
                   <p className="text-[10px] font-medium text-gray-800 tracking-widest">
                     Tel. 8937307; 8122608; 8122022
@@ -310,7 +313,7 @@ const handlePhotoUpload = (e) => {
                   </div>
                 </div>
                 
-                <div className="absolute bottom-[70px] w-full text-center text-black">
+                <div className="absolute bottom-[90px] w-full text-center text-black">
                   {employee_signature && (
                     <img
                       src={employee_signature}
