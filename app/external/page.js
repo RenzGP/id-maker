@@ -243,7 +243,7 @@ const handlePhotoUpload = (e) => {
                 id="front-id"
                 className="relative bg-white w-[360px] h-[550px] shadow-2xl rounded-lg overflow-hidden border border-gray-300"
               >
-                <div className="absolute left-[25px] top-[150px] bottom-0 w-[2px] bg-blue-900"></div>
+              /*  <div className="absolute left-[25px] top-[150px] bottom-0 w-[2px] bg-blue-900"></div> */
 
                 {/* Hex pattern LEFT 
                 <div className="absolute top-0 left-0 w-[180px] h-[140px] opacity-90 z-0">
@@ -355,7 +355,7 @@ const handlePhotoUpload = (e) => {
                 id="back-id"
                 className="relative bg-white w-[360px] h-[550px] shadow-2xl rounded-lg overflow-hidden border border-gray-300"
               >
-                <div className="absolute left-[24px] top-[150px] bottom-0 w-[2px] bg-blue-900"></div>
+               /* <div className="absolute left-[24px] top-[150px] bottom-0 w-[2px] bg-blue-900"></div> */
 
                 {/* Hex pattern only (no logo) 
                 <div className="absolute top-0 left-0 w-[180px] h-[140px] opacity-90">
