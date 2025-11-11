@@ -290,7 +290,7 @@ const handlePhotoUpload = (e) => {
                     {photo ? (
                       <img src={photo} alt="Uploaded" className="object-cover w-full h-full" />
                     ) : (
-                      <p className="text-[10px] text-gray-500">Photo Here</p>
+                      <p className="text-[10px] text-gray-500">Photasdo Here</p>
                     )}
                   </div>
 
