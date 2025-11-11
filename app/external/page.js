@@ -286,12 +286,16 @@ const handlePhotoUpload = (e) => {
                 </div>
 
                 <div className="absolute left-1/2 top-[180px] -translate-x-1/2 flex flex-col items-center text-center z-10">
-                  <div className="w-[130px] h-[130px] border-[3px] border-gray-400 rounded-md overflow-hidden mb-3 flex items-center justify-center bg-gray-200">
-                    {photo ? (
-                      <img src={photo} alt="Uploaded" className="object-cover w-full h-full" />
-                    ) : (
-                      <p className="text-[10px] text-gray-500">Photo Here</p>
-                    )}
+                  <div className="border-[3px] border-[#a6033f] rounded-[24px] w-[192px] h-[192px] flex items-center justify-center overflow-hidden bg-gray-200 mb-3">
+                        {photo_url ? (
+                          <img
+                            src={photo_url}
+                            alt="Uploaded"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="text-xs text-gray-600">Photoasss Here</div>
+                        )}
                   </div>
 
                   <div className="mt-1">
