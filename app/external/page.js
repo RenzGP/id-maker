@@ -416,7 +416,7 @@ export default function ExternalPage() {
                         style={{ fontSize: `${font_size_back}px` }}
                       >
                         <p>
-                          <strong>ID No:</strong> {id_no || ""}
+                          <strong>ID No:</strong> {id_no || "00000"}
                         </p>
                         <p>
                           <strong>SSS No:</strong> {sss_no || "00-0000000-0"}
