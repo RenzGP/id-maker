@@ -1,132 +1,180 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
-import companyLogo from "@/public/company-external.png";
-import charSig from "@/public/char_signature.png";
-import hexBg from "@/public/hex-bg.png";
 import * as htmlToImage from "html-to-image";
+import charSig from "@/public/char_signature.png";
+import html2canvas from "html2canvas";
+import company_logo from "@/public/company-logo.jpg";
 
-export default function ExternalPage() {
-  const [showBack, setShowBack] = useState(false);
+export default function InternalPage() {
+  const router = useRouter();
+  const card_ref = useRef(null);
 
-  // FRONT SIDE FIELDS
-  const [fullName, setFullName] = useState("");
-  const [position, setPosition] = useState("");
-  const [companyAssigned, setCompanyAssigned] = useState("");
-  const [photo, setPhoto] = useState(null);
+  const [show_back, set_show_back] = useState(false);
+
+  // -------------------- FRONT SIDE STATES --------------------
+  const [department, set_department] = useState("");
+  const [full_name, set_full_name] = useState("");
+  const [position, set_position] = useState("");
+  const [company_assigned, set_company_assigned] = useState("");
+  const [photo_url, set_photo_url] = useState("");
   const [employee_signature, set_employee_signature] = useState("");
   const [signature_width_employee, set_signature_width_employee] = useState(120);
   const [signature_height_employee, set_signature_height_employee] = useState(40);
 
-  // BACK SIDE FIELDS
-  const [idNo, setIdNo] = useState("");
-  const [sssNo, setSssNo] = useState("");
-  const [tinNo, setTinNo] = useState("");
-  const [emergencyName, setEmergencyName] = useState("");
-  const [emergencyAddress, setEmergencyAddress] = useState("");
-  const [emergencyContact, setEmergencyContact] = useState("");
+  // -------------------- BACK SIDE STATES --------------------
+  const [id_no, set_id_no] = useState("");
+  const [sss_no, set_sss_no] = useState("");
+  const [tin_no, set_tin_no] = useState("");
+  const [emergency_name, set_emergency_name] = useState("");
+  const [emergency_address, set_emergency_address] = useState("");
+  const [emergency_contact, set_emergency_contact] = useState("");
   const [charmaine_signature, set_charmaine_signature] = useState("")
   const [signature_width_charmaine, set_signature_width_charmaine] = useState(160);
   const [signature_height_charmaine, set_signature_height_charmaine] = useState(50);
 
-  // FONT SIZE SLIDERS
-  const [fullNameSize, setFullNameSize] = useState(16);
-  const [positionSize, setPositionSize] = useState(11);
-  const [backDetailsSize, setBackDetailsSize] = useState(11);
-  const [backEmergencySize, setBackEmergencySize] = useState(11);
+  // -------------------- FONT SIZES --------------------
+  const [font_size_dept, set_font_size_dept] = useState(26);
+  const [font_size_name, set_font_size_name] = useState(18);
+  const [font_size_position, set_font_size_position] = useState(11);
+  const [font_size_back, set_font_size_back] = useState(11);
 
-  const idRef = useRef(null);
+  // Cleanup object URL
+  useEffect(() => {
+    return () => {
+      if (photo_url) URL.revokeObjectURL(photo_url);
+    };
+  }, [photo_url]);
 
-  // 🔧 SAVE CURRENTLY VISIBLE SIDE (front/back)
-  const saveImage = async () => {
-    const element = document.getElementById(showBack ? "back-id" : "front-id");
-    if (!element) return;
+  // -------------------- IMAGE UPLOAD --------------------
+  const handle_photo_upload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => set_photo_url(reader.result || "");
+    reader.readAsDataURL(file);
+  };
 
+  // -------------------- SIGNATURE UPLOAD --------------------
+  const handle_signature_upload = (e, setter) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onloadend = () => setter(reader.result || "");
+  reader.readAsDataURL(file);
+};
+
+  // -------------------- FORMATTERS --------------------
+  const format_sss = (value) => {
+    const numbers = value.replace(/\D/g, "").slice(0, 10);
+    if (numbers.length <= 2) return numbers;
+    if (numbers.length <= 9) return `${numbers.slice(0, 2)}-${numbers.slice(2)}`;
+    return `${numbers.slice(0, 2)}-${numbers.slice(2, 9)}-${numbers.slice(9)}`;
+  };
+
+  const format_tin = (value) => {
+    const numbers = value.replace(/\D/g, "").slice(0, 9);
+    if (numbers.length <= 3) return numbers;
+    if (numbers.length <= 6) return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 6)}-${numbers.slice(6)}`;
+  };
+
+  const format_contact = (value) => {
+    const numbers = value.replace(/\D/g, "").slice(0, 11);
+    if (numbers.length <= 4) return numbers;
+    if (numbers.length <= 7) return `${numbers.slice(0, 4)}-${numbers.slice(4)}`;
+    return `${numbers.slice(0, 4)}-${numbers.slice(4, 7)}-${numbers.slice(7)}`;
+  };
+
+  // -------------------- IMAGE LOADING ENSURER --------------------
+  const ensure_images_loaded = async (root) => {
+    const imgs = (root || card_ref.current)?.querySelectorAll("img") || [];
+    await Promise.all(
+      Array.from(imgs).map(
+        (img) =>
+          new Promise((resolve) => {
+            if (img.complete) return resolve();
+            img.onload = resolve;
+            img.onerror = resolve;
+          })
+      )
+    );
+  };
+
+  // -------------------- SAVE AS IMAGE --------------------
+  const save_as_image = async () => {
+    if (!card_ref.current) return alert("No card to save");
     try {
-      const dataUrl = await htmlToImage.toPng(element, {
-        quality: 1,
+      await ensure_images_loaded();
+      const data_url = await htmlToImage.toPng(card_ref.current, {
+        cacheBust: true,
         pixelRatio: 3,
-        skipAutoScale: true,
-        canvasWidth: 1020, // 340 * 3
-        canvasHeight: 1560, // 520 * 3
+        backgroundColor: "white",
         style: {
-          transform: 'scale(1)',
+          fontFamily: "Greycliff Arabic CF, sans-serif, 'Font Awesome 6 Free'",
         },
       });
-      
-      const link = document.createElement("a");
-      link.download = `${fullName || "external-id"}-${showBack ? "back" : "front"}.png`;
-      link.href = dataUrl;
-      link.click();
-    } catch (error) {
-      console.error("Error saving image:", error);
+      const a = document.createElement("a");
+      a.href = data_url;
+      a.download = `${(full_name || "id-card").replace(/\s+/g, "_")}_id.png`;
+      a.click();
+    } catch (err) {
+      console.error("Save image error:", err);
+      alert("Saving image failed — check console.");
     }
   };
 
-  const ensureImagesLoaded = () => {
-      return new Promise((resolve) => {
-        const imgs = Array.from(document.images);
-        if (imgs.length === 0) return resolve();
-        let loaded = 0;
-        imgs.forEach((img) => {
-          if (img.complete) {
-            loaded++;
-            if (loaded === imgs.length) resolve();
-          } else {
-            img.onload = img.onerror = () => {
-              loaded++;
-              if (loaded === imgs.length) resolve();
-            };
-          }
-        });
-      });
-    };
-
-    const printBothSides = async () => {
-  if (!idRef.current) return alert("No card to print");
+  // -------------------- PRINT BOTH SIDES --------------------
+  const print_both_sides = async () => {
+  if (!card_ref.current) return alert("No card to print");
 
   try {
-    await ensureImagesLoaded();
+    await ensure_images_loaded();
 
-    const frontShown = !showBack;
-    if (!frontShown) setShowBack(false);
+    const front_shown = !show_back;
+    if (!front_shown) set_show_back(false);
     await new Promise((r) => setTimeout(r, 300));
-    await ensureImagesLoaded();
+    await ensure_images_loaded();
 
-    const frontData = await htmlToImage.toPng(idRef.current, {
+    const front_data = await htmlToImage.toPng(card_ref.current, {
       cacheBust: true,
       pixelRatio: 3,
       backgroundColor: "white",
       style: {
-        fontFamily: "Roboto, sans-serif, 'Font Awesome 6 Free'",
+        fontFamily: "Greycliff Arabic CF, sans-serif, 'Font Awesome 6 Free'",
       },
     });
 
-    setShowBack(true);
+    set_show_back(true);
     await new Promise((r) => setTimeout(r, 300));
-    await ensureImagesLoaded();
+    await ensure_images_loaded();
 
-    const backData = await htmlToImage.toPng(idRef.current, {
+    const back_data = await htmlToImage.toPng(card_ref.current, {
       cacheBust: true,
       pixelRatio: 3,
       backgroundColor: "white",
       style: {
-        fontFamily: "Roboto, sans-serif, 'Font Awesome 6 Free'",
+        fontFamily: "Greycliff Arabic CF, sans-serif, 'Font Awesome 6 Free'",
       },
     });
 
-    setShowBack(!frontShown);
+    // Restore previous state
+    set_show_back(!front_shown);
 
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) return alert("Pop-up blocked.");
+    // Open print window
+    const print_window = window.open("", "_blank");
+    if (!print_window) return alert("Pop-up blocked.");
 
-    // 🔧 Adjustable print constants
-    const CARD_WIDTH_IN = 2.3; 
-    const CARD_HEIGHT_IN = 3.375;
+    // Constants for layout
+    const CARD_WIDTH_IN = 2.2; // wider look
+    const CARD_HEIGHT_IN = 3.375; // standard ID height
     const GAP_IN = 0.5;
-    const PAGE_MARGIN_IN = 0.25; 
+    const PAGE_MARGIN_IN = 0.25;
 
-    printWindow.document.write(`
+    // 🔹 HTML must be inside a template literal (backticks)
+    print_window.document.write(`
       <html>
         <head>
           <title>Print ID</title>
@@ -159,253 +207,249 @@ export default function ExternalPage() {
         </head>
         <body>
           <div class="container">
-            <img src="${frontData}" />
-            <img src="${backData}" />
+            <img src="${front_data}" />
+            <img src="${back_data}" />
           </div>
-          <script>window.onload = () => window.print();</script>
+          <script>
+            window.onload = () => window.print();
+          </script>
         </body>
       </html>
     `);
 
-    printWindow.document.close();
+    print_window.document.close();
   } catch (err) {
     console.error("Print error:", err);
     alert("Printing failed — check console.");
   }
 };
 
-
-const handlePhotoUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setPhoto(reader.result);
-      reader.readAsDataURL(file);
-    }
-  };
-
-   // -------------------- SIGNATURE UPLOAD --------------------
-  const handle_signature_upload = (e, setter) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onloadend = () => setter(reader.result || "");
-  reader.readAsDataURL(file);
-};
-
-
-  // FORMATTERS
-  const format_sss = (value) => {
-    const numbers = value.replace(/\D/g, "").slice(0, 10);
-    if (numbers.length <= 2) return numbers;
-    if (numbers.length <= 9) return `${numbers.slice(0, 2)}-${numbers.slice(2)}`;
-    return `${numbers.slice(0, 2)}-${numbers.slice(2, 9)}-${numbers.slice(9)}`;
-  };
-  const format_tin = (value) => {
-    const numbers = value.replace(/\D/g, "").slice(0, 9);
-    if (numbers.length <= 3) return numbers;
-    if (numbers.length <= 6) return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
-    return `${numbers.slice(0, 3)}-${numbers.slice(3, 6)}-${numbers.slice(6)}`;
-  };
-  const format_contact = (value) => {
-    const numbers = value.replace(/\D/g, "").slice(0, 11);
-    if (numbers.length <= 4) return numbers;
-    if (numbers.length <= 7) return `${numbers.slice(0, 4)}-${numbers.slice(4)}`;
-    return `${numbers.slice(0, 4)}-${numbers.slice(4, 7)}-${numbers.slice(7)}`;
-  };
-
+  // -------------------- COMPONENT RENDER --------------------
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 py-10 font-roboto relative">
-      {/* Go Back Button */}
+    <div className="min-h-screen bg-gray-100 p-6 font-roboto relative">
       <button
-        onClick={() => (window.location.href = "/")}
-        className="absolute top-6 left-6 flex items-center gap-2 bg-blue-900 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-800 transition-all duration-200"
+        onClick={() => router.push("/")}
+        className="absolute top-6 left-6 flex items-center gap-2 bg-blue-900 text-white px-3 py-2 rounded-md shadow-md hover:bg-blue-800 transition"
       >
-        <i className="fa-solid fa-arrow-left text-sm"></i>
+        <i className="fa-solid fa-arrow-left text-sm" />
         <span className="text-sm font-medium">Go Back Home</span>
       </button>
 
-      <h1 className="text-2xl font-semibold text-center mb-8">
-        External Employee — ID Builder
-      </h1>
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-2xl font-semibold text-center mb-6">Internal Employee — ID Builder</h1>
 
-      <div className="flex flex-col lg:flex-row justify-center gap-8 px-6">
-        {/* ID PREVIEW */}
-        <div className="flex justify-center">
-          <div
-            ref={idRef}
-            className="relative w-[360px] h-[550px] overflow-hidden bg-white"
-            style={{ boxSizing: "border-box" }}
-          >
-            {!showBack ? (
-              /* FRONT SIDE */
-              <div
-                key="front"
-                id="front-id"
-                className="relative bg-white w-[370px] h-[550px] shadow-2xl rounded-lg overflow-hidden border border-gray-300"
-              >
-                {/* <div className="absolute left-[25px] top-[150px] bottom-0 w-[2px] bg-blue-900"></div> */}
-
-                {/* Hex pattern LEFT 
-                <div className="absolute top-0 left-0 w-[180px] h-[140px] opacity-90 z-0">
-                  <Image
-                    src={hexBg}
-                    alt="Background"
-                    fill
-                    className="object-cover"
-                    priority={true}
-                    unoptimized={true}
-                  />
-                </div> */}
-
-                {/* Company logo RIGHT */}
-                <div className="absolute top-3 right-3 z-10">
-                  <Image
-                    src={companyLogo}
-                    alt="Company Logo"
-                    width={90}
-                    height={90}
-                    className="object-contain"
-                    priority
-                    crossOrigin="anonymous"
-                  />
-                </div>
-
-                <div className="absolute top-[70px] w-full text-center z-10 leading-tight">
-                  <p className="text-[20px] font-semibold text-gray-800 tracking-widest">
-                    WORKSAVERS
-                  </p>
-                  <p className="text-[20px] font-semibold text-gray-800 tracking-widest">
-                    PERSONNEL SVCS., INC.
-                  </p>
-                    <p className="text-[10px] font-medium text-gray-800 tracking-widest">
-                    7827 Worksavers Bldg., S. Javier St.
-                  </p>
-                      <p className="text-[10px] font-medium text-gray-800 tracking-widest">
-                    Brgy. Pio Del Pilar, Makati City
-                  </p>
-                  <p className="text-[10px] font-medium text-gray-800 tracking-widest">
-                    Tel. 8937307; 8122608; 8122022
-                  </p>
-                </div>
-
-                <div className="absolute left-1/2 top-[180px] -translate-x-1/2 flex flex-col items-center text-center z-10">
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* ---------- LEFT: ID PREVIEW ---------- */}
+          <div className="flex-shrink-0">
+            <div
+              ref={card_ref}
+              className="relative bg-white shadow-xl border w-[360px] h-[550px] rounded-md flex overflow-hidden"
+            >
+              <div className="flex flex-col items-center relative" style={{ height: "100%" }}>
+                {/* Full vertical bar including logo */}
+                <div
+                  className="flex flex-col justify-start items-center"
+                  style={{
+                    width: "70px",
+                    height: "100%",
+                    backgroundColor: "#2b467d",
+                  }}
+                >
+                  {/* Logo section with gray background */}
                   <div
-                    className="border-[3px] border-gray-400 rounded-md overflow-hidden mb-3 flex items-center justify-center bg-gray-200"
-                    style={{ width: "2in", height: "2in" }}
+                    className="w-full h-[85px] flex justify-center items-center"
+                    style={{
+                      backgroundColor: "#d9d9d9",
+                    }}
                   >
-                    {photo ? (
-                      <img src={photo} alt="Uploaded" className="object-cover w-full h-full" />
-                    ) : (
-                      <p className="text-[10px] text-gray-500">Photo Here</p>
-                    )}
-                  </div>
-
-                  <div className="mt-1">
-                    <p className="font-bold text-red-700 leading-tight" style={{ fontSize: `${fullNameSize}px` }}>
-                      {fullName || "FULL NAME"}
-                    </p>
-                    <p className="text-gray-700 tracking-wider" style={{ fontSize: `${positionSize}px` }}>
-                      {position || "POSITION"}
-                    </p>
-                    <p className="text-gray-700 tracking-wider" style={{ fontSize: `${positionSize}px` }}>
-                      {companyAssigned || "COMPANY ASSIGNED"}
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="absolute bottom-[50px] w-full text-center text-black">
-                  {employee_signature && (
-                    <img
-                      src={employee_signature}
-                      alt="Employee Signature"
-                      className="mx-auto mt-1"
+                    <Image
+                      src={company_logo}
+                      alt="Logo"
+                      width={60}
+                      height={60}
                       style={{
-                        width: `${signature_width_employee}px`,
-                        height: `${signature_height_employee}px`,
-                        position: "relative",
+                        objectFit: "contain",
                       }}
                     />
-                  )}
-                  <div
-                    className="absolute bottom-0 left-1/2 -translate-x-1/2 text-center"
-                    style={{ width: "120px" }}
-                  >
-                    <div className="border-t border-black w-full mx-auto" />
-                    <p className="text-[10px] mt-1">Signature</p>
                   </div>
-                </div>
 
-                {/* 
-                  <div className="absolute bottom-[20px] left-0 w-full bg-[#a6192e] text-white py-1.5 px-5">
-                    <p className="text-[9.5px] font-medium flex items-center gap-2">
-                      <i className="fa-solid fa-location-dot"></i>
-                      7827 Worksavers Bldg., S. Javier St., Pio Del Pilar, Makati City
-                    </p>
-                    <p className="text-[8.5px] flex items-center gap-2">
-                      <i className="fa-solid fa-phone"></i>
-                      Tel. 8937307; 8122608; 8122022
-                    </p>
-                  </div>
-                  */}
+                  {/* Department label fills remaining space */}
+                  {/* <div className="flex-1 flex justify-center items-center">
+                    <div
+                      className="rotate-[270deg] text-white font-extrabold leading-none text-center whitespace-nowrap overflow-hidden text-ellipsis"
+                      style={{
+                        letterSpacing: "0.5em",
+                        fontSize: `${font_size_dept}px`,
+                        transformOrigin: "center center",
+                        maxWidth: "400px", //adjust if needed
+                      }}
+                    >
+                      {department || "DEPARTMENT"}
+                    </div>
+                  </div> */}
+                </div>
               </div>
-            ) : (
-              /* BACK SIDE */
-              <div
-                key="back"
-                id="back-id"
-                className="relative bg-white w-[360px] h-[550px] shadow-2xl rounded-lg overflow-hidden border border-gray-300"
-              >
-               {/* <div className="absolute left-[24px] top-[150px] bottom-0 w-[2px] bg-blue-900"></div> */}
+                {/* Main card area */}
+                <div className="flex-1 flex justify-center items-start mt-4">
+                  {!show_back ? (
+                    <div className="flex flex-col items-center justify-between p-6 pb-4 w-[260px]">
+                      <div className="text-center mb-2">
+                        <h1
+                          className="worksavers-logo text-4xl leading-none"
+                          style={{
+                            fontFamily: "Greycliff Arabic CF, sans-serif",
+                            fontWeight: 700,
+                            textTransform: "none", // ensures it keeps the original case
+                          }}
+                        >
+                          <span style={{ color: "#2b467d" }}>Work</span>
+                          <span style={{ color: "#a6033f" }}>savers</span>
+                        </h1>
 
-                {/* Hex pattern only (no logo) 
-                <div className="absolute top-0 left-0 w-[180px] h-[140px] opacity-90"> 
-                  <Image
-                    src={hexBg}
-                    alt="Background"
-                    fill
-                    className="object-cover"
-                    priority={true}
-                    unoptimized={true}
-                  />
-                </div> */}
+                        <div className="mt-1">
+                          <p className="text-[10px] font-bold tracking-wide text-black">
+                            WORKSAVERS PERSONNEL SVCS., INC.
+                          </p>
+                          <p className="text-[9px] leading-tight mt-1 text-black">
+                            7827 Worksavers Bldg., S. Javier St.
+                            <br />
+                            Brgy. Pio Del Pilar, Makati City, 1230
+                            <br />
+                            Tel. 8937307; 8122608; 8122022
+                          </p>
+                        </div>
+                      </div>
 
-                <div className="px-10 pt-20 text-[11px] text-gray-800 leading-relaxed z-10">
-                  <p style={{ fontSize: `${backDetailsSize}px` }}>
-                    <strong>ID NO:</strong> {idNo || "00000"}
-                  </p>
-                  <p style={{ fontSize: `${backDetailsSize}px` }}>
-                    <strong>SSS NO:</strong> {sssNo || "00-0000000-0"}
-                  </p>
-                  <p style={{ fontSize: `${backDetailsSize}px` }}>
-                    <strong>TIN NO:</strong> {tinNo || "000-000-000"}
-                  </p>
+                      <div className="border-[3px] border-[#a6033f] rounded-[24px] w-[192px] h-[192px] flex items-center justify-center overflow-hidden bg-gray-200 mb-3">
+                        {photo_url ? (
+                          <img
+                            src={photo_url}
+                            alt="Uploaded"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="text-xs text-gray-600">Photo Here</div>
+                        )}
+                      </div>
 
-                  <div className="my-3"></div>
 
-                  <p className="font-semibold text-[11px]">
-                    In case of Emergency Please Notify:
-                  </p>
-                  <p style={{ fontSize: `${backEmergencySize}px` }}>
-                    <strong>Name:</strong> {emergencyName || "First M. Last"}
-                  </p>
-                  <p style={{ fontSize: `${backEmergencySize}px` }}>
-                    <strong>Address:</strong> {emergencyAddress || "## St., City"}
-                  </p>
-                  <p style={{ fontSize: `${backEmergencySize}px` }}>
-                    <strong>Contact No:</strong> {emergencyContact || "0900-000-0000"}
-                  </p>
+                      {/* Name & Position */}
+                      <div className="text-center text-black mb-2">
+                        <p
+                          className="font-bold"
+                          style={{ fontSize: `${font_size_name}px` }}
+                        >
+                          {full_name || "FULL NAME"}
+                        </p>
+                        <p
+                          className="tracking-widest"
+                          style={{ fontSize: `${font_size_position}px` }}
+                        >
+                          {position || "POSITION"}
+                        </p>
+                      </div>
 
-                  <div className="my-6"></div>
+                      {/* Company Assigned */}
+                      <div className="text-center text-black mb-2">
+                        <p className="text-[11px]">{company_assigned || "COMPANY ASSIGNED"}</p>
+                      </div>
 
-                  <p className="text-justify text-[10.5px]">
-                    THIS IDENTIFICATION CARD BELONGS TO THE COMPANY AND MUST BE
-                    SURRENDERED UPON RESIGNATION OR TERMINATION OF EMPLOYMENT AS A
-                    REQUIREMENT FOR CLEARANCE.
-                  </p>
-                </div>
+                      {/* Signature Section */}
+                     <div
+                        className="text-center text-black mt-3 relative"
+                        style={{
+                          height: "60px", // fixed height area for signature and label
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <div
+                          className="relative"
+                          style={{
+                            width: `${signature_width_employee}px`,
+                            height: `${signature_height_employee + 25}px`, // extra space for label area
+                            position: "relative",
+                          }}
+                        >
+                          {employee_signature ? (
+                            <img
+                              src={employee_signature}
+                              alt="Employee Signature"
+                              className="absolute left-0 right-0 mx-auto"
+                              style={{
+                                bottom: signature_height_employee <= 100 ? "0px" : "-30px",
+                                width: `${signature_width_employee}px`,
+                                height: `${signature_height_employee}px`,
+                                objectFit: "contain",
+                                position: "absolute",
+                              }}
+                            />
+                          ) : (
+                            <div
+                              className="absolute top-1 left-0 right-0 mx-auto flex items-center justify-center text-[9px] text-gray-500 border border-gray-300 rounded"
+                              style={{
+                                width: `${signature_width_employee}px`,
+                                height: `${signature_height_employee}px`,
+                              }}
+                            >
+                              Signature Here
+                            </div>
+                          )}
 
-                <div className="text-center text-black mt-9 relative"
+                          {/* Fixed bottom line and label */}
+                          <div
+                            className="absolute bottom-0 left-1/2 -translate-x-1/2 text-center"
+                            style={{ width: "120px" }}
+                          >
+                            <div className="border-t border-black w-full mx-auto" />
+                            <p className="text-[10px] mt-1">Signature</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col justify-start w-[260px] p-5 pl-6 relative">
+                      <div
+                        className="mt-16 text-black leading-tight space-y-1"
+                        style={{ fontSize: `${font_size_back}px` }}
+                      >
+                        <p>
+                          <strong>ID No:</strong> {id_no || ""}
+                        </p>
+                        <p>
+                          <strong>SSS No:</strong> {sss_no || "00-0000000-0"}
+                        </p>
+                        <p>
+                          <strong>TIN No:</strong> {tin_no || "000-000-000"}
+                        </p>
+
+                        <div className="mt-5">
+                          <p className="font-bold mb-1">
+                            In case of Emergency Please Notify:
+                          </p>
+                          <p>
+                            <strong>Name:</strong>{" "}
+                            {emergency_name || "First Name M.I. Last Name"}
+                          </p>
+                          <p>
+                            <strong>Address:</strong>{" "}
+                            {emergency_address || "## St. Brgy. Municipality, City"}
+                          </p>
+                          <p>
+                            <strong>Contact No:</strong>{" "}
+                            {emergency_contact || "0900-000-0000"}
+                          </p>
+                        </div>
+
+                        <div className="mt-10 text-[10px] leading-snug text-justify tracking-[0.02em]">
+                          THIS IDENTIFICATION CARD BELONGS TO THE COMPANY AND MUST BE
+                          SURRENDERED UPON RESIGNATION OR TERMINATION OF EMPLOYMENT AS A
+                          REQUIREMENT FOR CLEARANCE.
+                        </div>
+
+                        <div className="text-center text-black mt-3 relative"
                         style={{
                           height: "80px", // fixed height area for signature and label
                           display: "flex",
@@ -421,7 +465,7 @@ const handlePhotoUpload = (e) => {
                             position: "relative",
                           }}
                         >
-                         <Image
+                          <Image
                             src={charSig}
                             alt="Charmaine Signature"
                             className="absolute top-0 left-0 right-0 mx-auto"
@@ -429,7 +473,7 @@ const handlePhotoUpload = (e) => {
                               width: `${signature_width_charmaine}px`,
                               height: `${signature_height_charmaine}px`,
                               objectFit: "contain",
-                            }}
+                              }}
                             priority
                             unoptimized
                           />
@@ -444,258 +488,317 @@ const handlePhotoUpload = (e) => {
                         </div>
                         </div>
 
-                {/* 
-                <div className="absolute bottom-[20px] left-0 w-full bg-[#a6192e] text-white py-1.5 px-5">
-                  <p className="text-[9.5px] font-medium flex items-center gap-2">
-                    <i className="fa-solid fa-location-dot"></i>
-                    7827 Worksavers Bldg., S. Javier St., Pio Del Pilar, Makati City
-                  </p>
-                  <p className="text-[8.5px] flex items-center gap-2">
-                    <i className="fa-solid fa-phone"></i>
-                    Tel. 8937307; 8122608; 8122022
-                  </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                */}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* CONTROLS */}
-        <div className="bg-white shadow-md rounded-xl p-6 lg:w-[820px]">
-          <h2 className="text-lg font-semibold mb-3 text-gray-800 text-center">
-            ID Controls
-          </h2>
-
-          {/* Buttons */}
-          <div className="flex justify-center gap-3 mb-6">
-            <button
-              onClick={() => setShowBack(false)}
-              className={`px-4 py-2 rounded-md font-medium ${
-                !showBack ? "bg-blue-900 text-white" : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              Front
-            </button>
-            <button
-              onClick={() => setShowBack(true)}
-              className={`px-4 py-2 rounded-md font-medium ${
-                showBack ? "bg-blue-900 text-white" : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              Back
-            </button>
-            <button onClick={saveImage} className="px-3 py-2 bg-green-600 text-white rounded">
-              Save Image
-            </button>
-            <button onClick={printBothSides} className="px-3 py-2 bg-red-600 text-white rounded">
-              Print Both Sides
-            </button>
-          </div>
-          {/* Font Size sliders are shown below each group's inputs */}
-
-          {/* FRONT INPUTS */}
-          {!showBack ? (
-            <div key="front-controls">
-              <label className="block font-medium mb-1">Full Name</label>
-              <input
-                type="text"
-                placeholder="Full Name"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value.toUpperCase())}
-                className="border w-full p-2 mb-3 rounded-md"
-              />
-              <label className="block font-medium mb-1">Position</label>
-              <input
-                type="text"
-                placeholder="Position"
-                value={position}
-                onChange={(e) => setPosition(e.target.value.toUpperCase())}
-                className="border w-full p-2 mb-3 rounded-md"
-              />
-              <label className="block font-medium mb-1">Company Assigned</label>
-              <input
-                type="text"
-                placeholder="Company Assigned"
-                value={companyAssigned}
-                onChange={(e) => setCompanyAssigned(e.target.value.toUpperCase())}
-                className="border w-full p-2 mb-3 rounded-md"
-              />
-
-              <label className="block text-sm font-semibold mb-1">
-                Upload Photo (2x2)
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handlePhotoUpload}
-                className="mb-2 w-full text-sm"
-              />
-
-              <label className="block font-medium mb-1">
-                Upload Employee Signature
-                </label>
-                <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => handle_signature_upload(e, set_employee_signature)}
-                className="w-full"
-              />
-
-              {/* Front font size sliders (below front inputs) */}
-              <div className="mt-3">
-                <label className="block font-medium mb-1">
-                  Full Name Font Size: {fullNameSize}px
-                </label>
-                <input
-                  type="range"
-                  min="10"
-                  max="30"
-                  value={fullNameSize}
-                  onChange={(e) => setFullNameSize(Number(e.target.value))}
-                  className="w-full mb-1"
-                />
-
-                <label className="block font-medium mb-1">
-                  Position Font Size: {positionSize}px
-                </label>
-                <input
-                  type="range"
-                  min="8"
-                  max="20"
-                  value={positionSize}
-                  onChange={(e) => setPositionSize(Number(e.target.value))}
-                  className="w-full mb-1"
-                />
-                <p className="font-semibold text-[13px] mb-1">Employee Signature Size</p>
-                  <div className="flex flex-wrap gap-4">
-                    <label className="flex flex-col text-[12px]">
-                      Width: {signature_width_employee}px
-                        <input
-                          type="range"
-                          min="60"
-                          max="230"
-                          value={signature_width_employee}
-                          onChange={(e) => set_signature_width_employee(e.target.value)}
-                        />
-                    </label>
-                    <label className="flex flex-col text-[12px]">
-                      Height: {signature_height_employee}px
-                        <input
-                          type="range"
-                          min="20"
-                          max="120"
-                          value={signature_height_employee}
-                          onChange={(e) => set_signature_height_employee(e.target.value)}
-                        />
-                    </label>
-                  </div>
-              </div>
             </div>
-          ) : (
-            /* BACK INPUTS */
-            <div key="back-controls">
-              <label className="block font-medium mb-1">ID No.</label>
-              <input
-                type="text"
-                placeholder="ID No."
-                value={idNo}
-                onChange={(e) => setIdNo(e.target.value)}
-                className="border w-full p-2 mb-3 rounded-md"
-              />
-              <label className="block font-medium mb-1">SSS No.</label>
-              <input
-                type="text"
-                placeholder="SSS No."
-                value={sssNo}
-                onChange={(e) => setSssNo(format_sss(e.target.value))}
-                className="border w-full p-2 mb-3 rounded-md"
-              />
-              <label className="block font-medium mb-1">TIN No.</label>
-              <input
-                type="text"
-                placeholder="TIN No."
-                value={tinNo}
-                onChange={(e) => setTinNo(format_tin(e.target.value))}
-                className="border w-full p-2 mb-3 rounded-md"
-              />
-              <label className="block font-medium mb-1">Emergency Contact Name</label>
-              <input
-                type="text"
-                placeholder="Emergency Contact Name"
-                value={emergencyName}
-                onChange={(e) => setEmergencyName(e.target.value.toUpperCase())}
-                className="border w-full p-2 mb-3 rounded-md"
-              />
-              <label className="block font-medium mb-1">Emergency Contact Address</label>
-              <input
-                type="text"
-                placeholder="Emergency Contact Address"
-                value={emergencyAddress}
-                onChange={(e) => setEmergencyAddress(e.target.value)}
-                className="border w-full p-2 mb-3 rounded-md"
-              />
-              <label className="block font-medium mb-1">Emergency Contact Number</label>
-              <input
-                type="text"
-                placeholder="Emergency Contact Number"
-                value={emergencyContact}
-                onChange={(e) => setEmergencyContact(format_contact(e.target.value))}
-                className="border w-full p-2 mb-3 rounded-md"
-              />
+          </div>
 
-              {/* Back font size sliders (below back inputs) */}
-              <div className="mt-3">
-                <label className="block font-medium mb-1">
-                  Back Details Font Size: {backDetailsSize}px
-                </label>
-                <input
-                  type="range"
-                  min="9"
-                  max="16"
-                  value={backDetailsSize}
-                  onChange={(e) => setBackDetailsSize(Number(e.target.value))}
-                  className="w-full mb-1"
-                />
+          {/* ---------- RIGHT: CONTROL PANEL ---------- */}
+          <div className="flex-1 lg:w-[420px]">
+            <div key={show_back ? "back-panel" : "front-panel"} className="bg-white shadow-md p-4 rounded-lg">
+              <h2 className="text-lg font-semibold mb-3 text-gray-800 text-center">
+                ID Controls
+              </h2>
 
-                <label className="block font-medium mb-1">
-                  Emergency Details Font Size: {backEmergencySize}px
-                </label>
-                <input
-                  type="range"
-                  min="9"
-                  max="16"
-                  value={backEmergencySize}
-                  onChange={(e) => setBackEmergencySize(Number(e.target.value))}
-                  className="w-full mb-1"
-                />
+              {/* Toolbar (one line, right-aligned like a toolbar) */}
+                <div className="flex justify-center items-center gap-3 mb-4">
+                  <button
+                    onClick={() => set_show_back(false)}
+                    className={`px-4 py-2 rounded-md font-medium transition ${
+                      !show_back
+                        ? "bg-blue-900 text-white shadow"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                  >
+                    Front
+                  </button>
 
-                <p className="font-semibold text-[13px] mb-1">Charmaine Signature Size</p>
-                  <div className="flex flex-wrap gap-4">
-                    <label className="flex flex-col text-[12px]">
-                      Width: {signature_width_charmaine}px
+                  <button
+                    onClick={() => set_show_back(true)}
+                    className={`px-4 py-2 rounded-md font-medium transition ${
+                      show_back
+                        ? "bg-blue-900 text-white shadow"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                  >
+                    Back
+                  </button>
+
+                  <button
+                    onClick={save_as_image}
+                    className="px-3 py-2 bg-green-600 text-white rounded"
+                  >
+                    Save Image
+                  </button>
+
+                  <button
+                    onClick={print_both_sides}
+                    className="px-3 py-2 bg-red-600 text-white rounded"
+                  >
+                    Print Both Sides
+                  </button>
+                </div>
+
+              <div className="space-y-3 text-sm">
+                {!show_back ? (
+                  <div key="front">
+                    <div>
+                      <label className="block font-medium mb-1">Full Name</label>
+                      <input
+                        type="text"
+                        placeholder="Enter full name"
+                        value={full_name || ""}
+                        onChange={(e) =>
+                          set_full_name(e.target.value.toUpperCase())
+                        }
+                        className="border w-full p-2 mb-3 rounded-md uppercase"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-medium mb-1">Position</label>
+                      <input
+                        type="text"
+                        placeholder="Enter position"
+                        value={position || ""}
+                        onChange={(e) =>
+                          set_position(e.target.value.toUpperCase())
+                        }
+                        className="border w-full p-2 mb-3 rounded-md"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-medium mb-1">Company Assigned</label>
+                      <input
+                        type="text"
+                        placeholder="Enter Company Assigned"
+                        value={company_assigned || ""}
+                        onChange={(e) => set_company_assigned(e.target.value)}
+                        className="border w-full p-2 mb-3 rounded-md"
+                      />
+                    </div>
+                    {/* <div>
+                      <label className="block font-medium mb-1">Department</label>
+                      <input
+                        type="text"
+                        placeholder="Enter department"
+                        value={department || ""}
+                        onChange={(e) =>
+                          set_department(e.target.value.toUpperCase())
+                        }
+                        className="border w-full p-2 mb-3 rounded-md"
+                      />
+                    </div> */}
+                    <div>
+                      <label className="block font-medium mb-1">
+                        Upload Photo (2x2)
+                      </label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handle_photo_upload}
+                        className="w-full"
+                      />
+                    </div>
+                    <div>
+                    <label className="block font-medium mb-1">
+                      Upload Employee Signature
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handle_signature_upload(e, set_employee_signature)}
+                      className="w-full"
+                    />
+                  </div>
+                    <div className="mt-3">
+                      {/* <label className="block font-medium mb-1">
+                        Department Font Size: {font_size_dept}px
+                      </label>
                       <input
                         type="range"
-                        min="60"
-                        max="250"
-                        value={signature_width_charmaine}
-                        onChange={(e) => set_signature_width_charmaine(e.target.value)}
+                        min="10"
+                        max="30"
+                        value={font_size_dept}
+                        onChange={(e) =>
+                          set_font_size_dept(Number(e.target.value))
+                        }
+                        className="w-full mb-1"
+                      /> */}
+
+                      <label className="block font-medium mb-1">
+                        Full Name Font Size: {font_size_name}px
+                      </label>
+                      <input
+                        type="range"
+                        min="8"
+                        max="20"
+                        value={font_size_name}
+                        onChange={(e) =>
+                          set_font_size_name(Number(e.target.value))
+                        }
+                        className="w-full mb-1"
                       />
-                    </label>
-                    <label className="flex flex-col text-[12px]">
-                      Height: {signature_height_charmaine}px
-                        <input
-                          type="range"
-                          min="20"
-                          max="120"
-                          value={signature_height_charmaine}
-                          onChange={(e) => set_signature_height_charmaine(e.target.value)}
+
+                      <label className="block font-medium mb-1">
+                        Position Font Size: {font_size_position}px
+                      </label>
+                      <input
+                        type="range"
+                        min="8"
+                        max="20"
+                        value={font_size_position}
+                        onChange={(e) =>
+                          set_font_size_position(Number(e.target.value))
+                        }
+                        className="w-full mb-1"
                       />
-                    </label>
-                </div>
+                      <p className="font-semibold text-[13px] mb-1">Employee Signature Size</p>
+                        <div className="flex flex-wrap gap-4">
+                          <label className="flex flex-col text-[12px]">
+                            Width: {signature_width_employee}px
+                            <input
+                              type="range"
+                              min="60"
+                              max="230"
+                              value={signature_width_employee}
+                              onChange={(e) => set_signature_width_employee(e.target.value)}
+                            />
+                          </label>
+                          <label className="flex flex-col text-[12px]">
+                            Height: {signature_height_employee}px
+                            <input
+                              type="range"
+                              min="20"
+                              max="130"
+                              value={signature_height_employee}
+                              onChange={(e) => set_signature_height_employee(e.target.value)}
+                            />
+                          </label>
+                        </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div key="back">
+                    <div>
+                      <label className="block font-medium mb-1">ID No.</label>
+                      <input
+                        type="text"
+                        placeholder=""
+                        value={id_no || ""}
+                        onChange={(e) =>
+                          set_id_no(e.target.value)
+                        }
+                        className="border w-full p-2 mb-3 rounded-md"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-medium mb-1">SSS No.</label>
+                      <input
+                        type="text"
+                        placeholder="00-0000000-0"
+                        value={sss_no || ""}
+                        onChange={(e) =>
+                          set_sss_no(format_sss(e.target.value))
+                        }
+                        className="border w-full p-2 mb-3 rounded-md"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-medium mb-1">TIN No.</label>
+                      <input
+                        type="text"
+                        placeholder="000-000-000"
+                        value={tin_no || ""}
+                        onChange={(e) =>
+                          set_tin_no(format_tin(e.target.value))
+                        }
+                        className="border w-full p-2 mb-3 rounded-md"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-medium mb-1">
+                        Emergency Name
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="First Name M.I. Last Name"
+                        value={emergency_name || ""}
+                        onChange={(e) => set_emergency_name(e.target.value.toUpperCase())}
+                        className="border w-full p-2 mb-3 rounded-md"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-medium mb-1">
+                        Emergency Address
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="## St. Brgy. Municipality, City"
+                        value={emergency_address || ""}
+                        onChange={(e) => set_emergency_address(e.target.value.toUpperCase())}
+                        className="border w-full p-2 mb-3 rounded-md"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-medium mb-1">
+                        Emergency Contact No.
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="0900-000-0000"
+                        value={emergency_contact || ""}
+                        onChange={(e) =>
+                          set_emergency_contact(format_contact(e.target.value))
+                        }
+                        className="border w-full p-2 mb-3 rounded-md"
+                        inputMode="numeric"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-medium mb-1">
+                        Back Font Size: {font_size_back}px
+                      </label>
+                      <input
+                        type="range"
+                        min="8"
+                        max="20"
+                        value={font_size_back}
+                        onChange={(e) =>
+                          set_font_size_back(Number(e.target.value))
+                        }
+                        className="w-full"
+                      />
+                      <p className="font-semibold text-[13px] mb-1">Charmaine Signature Size</p>
+                        <div className="flex flex-wrap gap-4">
+                          <label className="flex flex-col text-[12px]">
+                            Width: {signature_width_charmaine}px
+                            <input
+                              type="range"
+                              min="60"
+                              max="250"
+                              value={signature_width_charmaine}
+                              onChange={(e) => set_signature_width_charmaine(e.target.value)}
+                            />
+                          </label>
+                          <label className="flex flex-col text-[12px]">
+                            Height: {signature_height_charmaine}px
+                            <input
+                              type="range"
+                              min="20"
+                              max="120"
+                              value={signature_height_charmaine}
+                              onChange={(e) => set_signature_height_charmaine(e.target.value)}
+                            />
+                          </label>
+                        </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
