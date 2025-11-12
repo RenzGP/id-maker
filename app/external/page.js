@@ -8,7 +8,7 @@ import charSig from "@/public/char_signature.png";
 import html2canvas from "html2canvas";
 import company_logo from "@/public/company-logo.jpg";
 
-export default function InternalPage() {
+export default function ExternalPage() {
   const router = useRouter();
   const card_ref = useRef(null);
 
@@ -236,7 +236,7 @@ export default function InternalPage() {
       </button>
 
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl font-semibold text-center mb-6">Internal Employee — ID Builder</h1>
+        <h1 className="text-2xl font-semibold text-center mb-6">External Employee — ID Builder</h1>
 
         <div className="flex flex-col lg:flex-row gap-6">
           {/* ---------- LEFT: ID PREVIEW ---------- */}
