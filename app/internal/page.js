@@ -111,7 +111,6 @@ export default function InternalPage() {
         backgroundColor: "white",
         style: {
           fontFamily: "Greycliff Arabic CF, sans-serif, 'Font Awesome 6 Free'",
-          border: "1px solid #000",
         },
       });
       const a = document.createElement("a");
@@ -142,7 +141,6 @@ export default function InternalPage() {
         backgroundColor: "white",
         style: {
           fontFamily: "Greycliff Arabic CF, sans-serif, 'Font Awesome 6 Free'",
-          border: "1px solid #000",
         },
       });
 
@@ -156,7 +154,6 @@ export default function InternalPage() {
         backgroundColor: "white",
         style: {
           fontFamily: "Greycliff Arabic CF, sans-serif, 'Font Awesome 6 Free'",
-          border: "1px solid #000",
         },
       });
 
@@ -167,7 +164,6 @@ export default function InternalPage() {
       const print_window = window.open("", "_blank");
       if (!print_window) return alert("Pop-up blocked.");
 
-      // Constants for layout
       const CARD_WIDTH_IN = 2.2;
       const CARD_HEIGHT_IN = 3.375;
       const GAP_IN = 0.5;
@@ -200,7 +196,6 @@ export default function InternalPage() {
                 width: ${CARD_WIDTH_IN}in;
                 height: ${CARD_HEIGHT_IN}in;
                 object-fit: contain;
-                border: 1px solid #000;
               }
             </style>
           </head>
@@ -240,16 +235,23 @@ export default function InternalPage() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* ---------- LEFT: ID PREVIEW ---------- */}
           <div className="flex-shrink-0">
-            {/* ✅ FIX: replaced Tailwind `border` class with inline style so htmlToImage always captures it */}
             <div
               ref={card_ref}
               className="relative bg-white shadow-xl rounded-md flex overflow-hidden"
-              style={{
-                width: "360px",
-                height: "550px",
-                border: "1px solid #000",
-              }}
+              style={{ width: "360px", height: "550px" }}
             >
+              {/* ✅ Border overlay — always captured by htmlToImage on both front and back */}
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  border: "1px solid #000",
+                  borderRadius: "6px",
+                  pointerEvents: "none",
+                  zIndex: 50,
+                }}
+              />
+
               <div className="flex flex-col items-center relative" style={{ height: "100%" }}>
                 {/* Full vertical bar including logo */}
                 <div
@@ -263,18 +265,14 @@ export default function InternalPage() {
                   {/* Logo section with gray background */}
                   <div
                     className="w-full h-[85px] flex justify-center items-center"
-                    style={{
-                      backgroundColor: "#d9d9d9",
-                    }}
+                    style={{ backgroundColor: "#d9d9d9" }}
                   >
                     <Image
                       src={company_logo}
                       alt="Logo"
                       width={60}
                       height={60}
-                      style={{
-                        objectFit: "contain",
-                      }}
+                      style={{ objectFit: "contain" }}
                     />
                   </div>
 
@@ -328,11 +326,7 @@ export default function InternalPage() {
 
                     <div className="border-[3px] border-[#a6033f] rounded-[24px] w-[192px] h-[192px] flex items-center justify-center overflow-hidden bg-gray-200 mb-3">
                       {photo_url ? (
-                        <img
-                          src={photo_url}
-                          alt="Uploaded"
-                          className="w-full h-full object-cover"
-                        />
+                        <img src={photo_url} alt="Uploaded" className="w-full h-full object-cover" />
                       ) : (
                         <div className="text-xs text-gray-600">Photo Here</div>
                       )}
@@ -340,16 +334,10 @@ export default function InternalPage() {
 
                     {/* Name & Position */}
                     <div className="text-center text-black mb-2">
-                      <p
-                        className="font-bold"
-                        style={{ fontSize: `${font_size_name}px` }}
-                      >
+                      <p className="font-bold" style={{ fontSize: `${font_size_name}px` }}>
                         {full_name || "FULL NAME"}
                       </p>
-                      <p
-                        className="tracking-widest"
-                        style={{ fontSize: `${font_size_position}px` }}
-                      >
+                      <p className="tracking-widest" style={{ fontSize: `${font_size_position}px` }}>
                         {position || "POSITION"}
                       </p>
                     </div>
@@ -403,7 +391,6 @@ export default function InternalPage() {
                           </div>
                         )}
 
-                        {/* Fixed bottom line and label */}
                         <div
                           className="absolute bottom-0 left-1/2 -translate-x-1/2 text-center"
                           style={{ width: "120px" }}
@@ -420,29 +407,14 @@ export default function InternalPage() {
                       className="mt-16 text-black leading-tight space-y-1"
                       style={{ fontSize: `${font_size_back}px` }}
                     >
-                      <p>
-                        <strong>SSS No:</strong> {sss_no || "00-0000000-0"}
-                      </p>
-                      <p>
-                        <strong>TIN No:</strong> {tin_no || "000-000-000"}
-                      </p>
+                      <p><strong>SSS No:</strong> {sss_no || "00-0000000-0"}</p>
+                      <p><strong>TIN No:</strong> {tin_no || "000-000-000"}</p>
 
                       <div className="mt-5">
-                        <p className="font-bold mb-1">
-                          In case of Emergency Please Notify:
-                        </p>
-                        <p>
-                          <strong>Name:</strong>{" "}
-                          {emergency_name || "First Name M.I. Last Name"}
-                        </p>
-                        <p>
-                          <strong>Address:</strong>{" "}
-                          {emergency_address || "## St. Brgy. Municipality, City"}
-                        </p>
-                        <p>
-                          <strong>Contact No:</strong>{" "}
-                          {emergency_contact || "0900-000-0000"}
-                        </p>
+                        <p className="font-bold mb-1">In case of Emergency Please Notify:</p>
+                        <p><strong>Name:</strong> {emergency_name || "First Name M.I. Last Name"}</p>
+                        <p><strong>Address:</strong> {emergency_address || "## St. Brgy. Municipality, City"}</p>
+                        <p><strong>Contact No:</strong> {emergency_contact || "0900-000-0000"}</p>
                       </div>
 
                       <div className="mt-10 text-[10px] leading-snug text-justify tracking-[0.02em]">
@@ -501,45 +473,30 @@ export default function InternalPage() {
           {/* ---------- RIGHT: CONTROL PANEL ---------- */}
           <div className="flex-1 lg:w-[420px]">
             <div key={show_back ? "back-panel" : "front-panel"} className="bg-white shadow-md p-4 rounded-lg">
-              <h2 className="text-lg font-semibold mb-3 text-gray-800 text-center">
-                ID Controls
-              </h2>
+              <h2 className="text-lg font-semibold mb-3 text-gray-800 text-center">ID Controls</h2>
 
               {/* Toolbar */}
               <div className="flex justify-center items-center gap-3 mb-4">
                 <button
                   onClick={() => set_show_back(false)}
                   className={`px-4 py-2 rounded-md font-medium transition ${
-                    !show_back
-                      ? "bg-blue-900 text-white shadow"
-                      : "bg-gray-200 text-gray-700"
+                    !show_back ? "bg-blue-900 text-white shadow" : "bg-gray-200 text-gray-700"
                   }`}
                 >
                   Front
                 </button>
-
                 <button
                   onClick={() => set_show_back(true)}
                   className={`px-4 py-2 rounded-md font-medium transition ${
-                    show_back
-                      ? "bg-blue-900 text-white shadow"
-                      : "bg-gray-200 text-gray-700"
+                    show_back ? "bg-blue-900 text-white shadow" : "bg-gray-200 text-gray-700"
                   }`}
                 >
                   Back
                 </button>
-
-                <button
-                  onClick={save_as_image}
-                  className="px-3 py-2 bg-green-600 text-white rounded"
-                >
+                <button onClick={save_as_image} className="px-3 py-2 bg-green-600 text-white rounded">
                   Save Image
                 </button>
-
-                <button
-                  onClick={print_both_sides}
-                  className="px-3 py-2 bg-red-600 text-white rounded"
-                >
+                <button onClick={print_both_sides} className="px-3 py-2 bg-red-600 text-white rounded">
                   Print Both Sides
                 </button>
               </div>
@@ -588,20 +545,11 @@ export default function InternalPage() {
                       />
                     </div>
                     <div>
-                      <label className="block font-medium mb-1">
-                        Upload Photo (2x2)
-                      </label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handle_photo_upload}
-                        className="w-full"
-                      />
+                      <label className="block font-medium mb-1">Upload Photo (2x2)</label>
+                      <input type="file" accept="image/*" onChange={handle_photo_upload} className="w-full" />
                     </div>
                     <div>
-                      <label className="block font-medium mb-1">
-                        Upload Employee Signature
-                      </label>
+                      <label className="block font-medium mb-1">Upload Employee Signature</label>
                       <input
                         type="file"
                         accept="image/*"
@@ -610,61 +558,37 @@ export default function InternalPage() {
                       />
                     </div>
                     <div className="mt-3">
-                      <label className="block font-medium mb-1">
-                        Department Font Size: {font_size_dept}px
-                      </label>
+                      <label className="block font-medium mb-1">Department Font Size: {font_size_dept}px</label>
                       <input
-                        type="range"
-                        min="10"
-                        max="30"
-                        value={font_size_dept}
+                        type="range" min="10" max="30" value={font_size_dept}
                         onChange={(e) => set_font_size_dept(Number(e.target.value))}
                         className="w-full mb-1"
                       />
-
-                      <label className="block font-medium mb-1">
-                        Full Name Font Size: {font_size_name}px
-                      </label>
+                      <label className="block font-medium mb-1">Full Name Font Size: {font_size_name}px</label>
                       <input
-                        type="range"
-                        min="8"
-                        max="20"
-                        value={font_size_name}
+                        type="range" min="8" max="20" value={font_size_name}
                         onChange={(e) => set_font_size_name(Number(e.target.value))}
                         className="w-full mb-1"
                       />
-
-                      <label className="block font-medium mb-1">
-                        Position Font Size: {font_size_position}px
-                      </label>
+                      <label className="block font-medium mb-1">Position Font Size: {font_size_position}px</label>
                       <input
-                        type="range"
-                        min="8"
-                        max="20"
-                        value={font_size_position}
+                        type="range" min="8" max="20" value={font_size_position}
                         onChange={(e) => set_font_size_position(Number(e.target.value))}
                         className="w-full mb-1"
                       />
-
                       <p className="font-semibold text-[13px] mb-1">Employee Signature Size</p>
                       <div className="flex flex-wrap gap-4">
                         <label className="flex flex-col text-[12px]">
                           Width: {signature_width_employee}px
                           <input
-                            type="range"
-                            min="60"
-                            max="230"
-                            value={signature_width_employee}
+                            type="range" min="60" max="230" value={signature_width_employee}
                             onChange={(e) => set_signature_width_employee(e.target.value)}
                           />
                         </label>
                         <label className="flex flex-col text-[12px]">
                           Height: {signature_height_employee}px
                           <input
-                            type="range"
-                            min="20"
-                            max="130"
-                            value={signature_height_employee}
+                            type="range" min="20" max="130" value={signature_height_employee}
                             onChange={(e) => set_signature_height_employee(e.target.value)}
                           />
                         </label>
@@ -694,9 +618,7 @@ export default function InternalPage() {
                       />
                     </div>
                     <div>
-                      <label className="block font-medium mb-1">
-                        Emergency Name
-                      </label>
+                      <label className="block font-medium mb-1">Emergency Name</label>
                       <input
                         type="text"
                         placeholder="First Name M.I. Last Name"
@@ -706,9 +628,7 @@ export default function InternalPage() {
                       />
                     </div>
                     <div>
-                      <label className="block font-medium mb-1">
-                        Emergency Address
-                      </label>
+                      <label className="block font-medium mb-1">Emergency Address</label>
                       <input
                         type="text"
                         placeholder="## St. Brgy. Municipality, City"
@@ -718,9 +638,7 @@ export default function InternalPage() {
                       />
                     </div>
                     <div>
-                      <label className="block font-medium mb-1">
-                        Emergency Contact No.
-                      </label>
+                      <label className="block font-medium mb-1">Emergency Contact No.</label>
                       <input
                         type="text"
                         placeholder="0900-000-0000"
@@ -731,37 +649,25 @@ export default function InternalPage() {
                       />
                     </div>
                     <div>
-                      <label className="block font-medium mb-1">
-                        Back Font Size: {font_size_back}px
-                      </label>
+                      <label className="block font-medium mb-1">Back Font Size: {font_size_back}px</label>
                       <input
-                        type="range"
-                        min="8"
-                        max="20"
-                        value={font_size_back}
+                        type="range" min="8" max="20" value={font_size_back}
                         onChange={(e) => set_font_size_back(Number(e.target.value))}
                         className="w-full"
                       />
-
                       <p className="font-semibold text-[13px] mb-1 mt-2">Charmaine Signature Size</p>
                       <div className="flex flex-wrap gap-4">
                         <label className="flex flex-col text-[12px]">
                           Width: {signature_width_charmaine}px
                           <input
-                            type="range"
-                            min="60"
-                            max="250"
-                            value={signature_width_charmaine}
+                            type="range" min="60" max="250" value={signature_width_charmaine}
                             onChange={(e) => set_signature_width_charmaine(e.target.value)}
                           />
                         </label>
                         <label className="flex flex-col text-[12px]">
                           Height: {signature_height_charmaine}px
                           <input
-                            type="range"
-                            min="20"
-                            max="120"
-                            value={signature_height_charmaine}
+                            type="range" min="20" max="120" value={signature_height_charmaine}
                             onChange={(e) => set_signature_height_charmaine(e.target.value)}
                           />
                         </label>
