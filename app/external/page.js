@@ -236,7 +236,7 @@ export default function ExternalPage() {
       </button>
 
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl font-semibold text-center mb-6">External Employee — ID Builder</h1>
+        <h1 className="text-2xl font-semibold text-center mb-6">External Employsee — ID Builder</h1>
 
         <div className="flex flex-col lg:flex-row gap-6">
           {/* ---------- LEFT: ID PREVIEW ---------- */}
