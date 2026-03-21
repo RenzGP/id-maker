@@ -148,7 +148,6 @@ export default function ExternalPage() {
       // Restore previous state
       set_show_back(!front_shown);
 
-      // Open print window
       const print_window = window.open("", "_blank");
       if (!print_window) return alert("Pop-up blocked.");
 
@@ -264,7 +263,7 @@ export default function ExternalPage() {
                     />
                   </div>
 
-                  {/* Department label fills remaining space */}
+                  {/* Department / EST label */}
                   <div className="flex-1 flex justify-center items-center">
                     <div
                       className="rotate-[270deg] text-white font-extrabold leading-none text-center whitespace-nowrap overflow-hidden text-ellipsis"
@@ -297,7 +296,6 @@ export default function ExternalPage() {
                         <span style={{ color: "#2b467d" }}>Work</span>
                         <span style={{ color: "#a6033f" }}>savers</span>
                       </h1>
-
                       <div className="mt-1">
                         <p className="text-[10px] font-bold tracking-wide text-black">
                           WORKSAVERS PERSONNEL SVCS., INC.
@@ -334,6 +332,24 @@ export default function ExternalPage() {
                     <div className="text-center text-black mb-2">
                       <p className="text-[11px]">{company_assigned || "COMPANY ASSIGNED"}</p>
                     </div>
+
+                    {/* Blank Signature Area */}
+                    <div
+                      className="text-center text-black mt-3"
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      <div style={{ width: "120px" }}>
+                        {/* Empty space for physical signature */}
+                        <div style={{ height: "30px" }} />
+                        <div className="border-t border-black w-full" />
+                        <p className="text-[10px] mt-1">Signature</p>
+                      </div>
+                    </div>
                   </div>
                 ) : (
                   <div className="flex flex-col justify-start w-[260px] p-5 pl-6 relative">
@@ -358,6 +374,7 @@ export default function ExternalPage() {
                         REQUIREMENT FOR CLEARANCE.
                       </div>
 
+                      {/* Charmaine Signature */}
                       <div
                         className="text-center text-black mt-3 relative"
                         style={{
