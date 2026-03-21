@@ -19,9 +19,6 @@ export default function ExternalPage() {
   const [position, set_position] = useState("");
   const [company_assigned, set_company_assigned] = useState("");
   const [photo_url, set_photo_url] = useState("");
-  const [employee_signature, set_employee_signature] = useState("");
-  const [signature_width_employee, set_signature_width_employee] = useState(120);
-  const [signature_height_employee, set_signature_height_employee] = useState(40);
 
   // -------------------- BACK SIDE STATES --------------------
   const [id_no, set_id_no] = useState("");
@@ -51,15 +48,6 @@ export default function ExternalPage() {
     if (!file) return;
     const reader = new FileReader();
     reader.onloadend = () => set_photo_url(reader.result || "");
-    reader.readAsDataURL(file);
-  };
-
-  // -------------------- SIGNATURE UPLOAD --------------------
-  const handle_signature_upload = (e, setter) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => setter(reader.result || "");
     reader.readAsDataURL(file);
   };
 
@@ -346,60 +334,6 @@ export default function ExternalPage() {
                     <div className="text-center text-black mb-2">
                       <p className="text-[11px]">{company_assigned || "COMPANY ASSIGNED"}</p>
                     </div>
-
-                    {/* Signature Section */}
-                    <div
-                      className="text-center text-black mt-3 relative"
-                      style={{
-                        height: "60px",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      <div
-                        className="relative"
-                        style={{
-                          width: `${signature_width_employee}px`,
-                          height: `${signature_height_employee + 25}px`,
-                          position: "relative",
-                        }}
-                      >
-                        {employee_signature ? (
-                          <img
-                            src={employee_signature}
-                            alt="Employee Signature"
-                            className="absolute left-0 right-0 mx-auto"
-                            style={{
-                              bottom: signature_height_employee <= 100 ? "0px" : "-30px",
-                              width: `${signature_width_employee}px`,
-                              height: `${signature_height_employee}px`,
-                              objectFit: "contain",
-                              position: "absolute",
-                            }}
-                          />
-                        ) : (
-                          <div
-                            className="absolute top-1 left-0 right-0 mx-auto flex items-center justify-center text-[9px] text-gray-500 border border-gray-300 rounded"
-                            style={{
-                              width: `${signature_width_employee}px`,
-                              height: `${signature_height_employee}px`,
-                            }}
-                          >
-                            Signature Here
-                          </div>
-                        )}
-
-                        <div
-                          className="absolute bottom-0 left-1/2 -translate-x-1/2 text-center"
-                          style={{ width: "120px" }}
-                        >
-                          <div className="border-t border-black w-full mx-auto" />
-                          <p className="text-[10px] mt-1">Signature</p>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 ) : (
                   <div className="flex flex-col justify-start w-[260px] p-5 pl-6 relative">
@@ -539,15 +473,6 @@ export default function ExternalPage() {
                       <label className="block font-medium mb-1">Upload Photo (2x2)</label>
                       <input type="file" accept="image/*" onChange={handle_photo_upload} className="w-full" />
                     </div>
-                    <div>
-                      <label className="block font-medium mb-1">Upload Employee Signature</label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handle_signature_upload(e, set_employee_signature)}
-                        className="w-full"
-                      />
-                    </div>
                     <div className="mt-3">
                       <label className="block font-medium mb-1">Full Name Font Size: {font_size_name}px</label>
                       <input
@@ -561,23 +486,6 @@ export default function ExternalPage() {
                         onChange={(e) => set_font_size_position(Number(e.target.value))}
                         className="w-full mb-1"
                       />
-                      <p className="font-semibold text-[13px] mb-1">Employee Signature Size</p>
-                      <div className="flex flex-wrap gap-4">
-                        <label className="flex flex-col text-[12px]">
-                          Width: {signature_width_employee}px
-                          <input
-                            type="range" min="60" max="230" value={signature_width_employee}
-                            onChange={(e) => set_signature_width_employee(e.target.value)}
-                          />
-                        </label>
-                        <label className="flex flex-col text-[12px]">
-                          Height: {signature_height_employee}px
-                          <input
-                            type="range" min="20" max="130" value={signature_height_employee}
-                            onChange={(e) => set_signature_height_employee(e.target.value)}
-                          />
-                        </label>
-                      </div>
                     </div>
                   </div>
                 ) : (
